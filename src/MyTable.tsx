@@ -27,6 +27,9 @@ const CustomTable = (props: { thePages: Page[] }) => {
     return arr.reduce((accumulator, currentValue) => accumulator + (currentValue + " || "), "");
   }
 
+  // Filter out rows with blank names
+  const filteredData = customTableData.filter((row) => row && row.name && row.name.trim() !== "");
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -37,16 +40,18 @@ const CustomTable = (props: { thePages: Page[] }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {customTableData.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="left">{concatenateArrayToString(row.tags)}</TableCell>
-            </TableRow>
+          {filteredData.map((row) => (
+            row && row.name ? ( // Safety Check
+              <TableRow
+                key={row.name}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                <TableCell align="left">{concatenateArrayToString(row.tags)}</TableCell>
+              </TableRow>
+            ) : null // or return a placeholder row
           ))}
         </TableBody>
       </Table>
