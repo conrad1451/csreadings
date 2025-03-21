@@ -12,29 +12,29 @@ interface Page {
   tags: string[];
 }
 
-const ReturnFormat1 = (props: {thePages: Page[]}) => {
-    return (
-        <div>
-          {props.thePages.map((page) => (
-            <div key={page.name}>
-              <p>
-                {"Name -->"} {page.name}:
-              </p>
-              <p>
-                {"Tags --> "}
-                {page.tags.map((tag) => (
-                  <span key={tag}>
-                    {tag + " || "}
-                  </span>
-                ))}
-              </p>
-              <br />
-              <br />
-            </div>
-          ))}
-        </div>
-    );
-}
+// const ReturnFormat1 = (props: {thePages: Page[]}) => {
+//     return (
+//         <div>
+//           {props.thePages.map((page) => (
+//             <div key={page.name}>
+//               <p>
+//                 {"Name -->"} {page.name}:
+//               </p>
+//               <p>
+//                 {"Tags --> "}
+//                 {page.tags.map((tag) => (
+//                   <span key={tag}>
+//                     {tag + " || "}
+//                   </span>
+//                 ))}
+//               </p>
+//               <br />
+//               <br />
+//             </div>
+//           ))}
+//         </div>
+//     );
+// }
 
 const ReturnFormat2 = (props: {thePages: Page[]}) => {
     return (
