@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+// import CustomTable from './MyTable'
 
-import BasicTable from './MyTable'
-// import CSNotionPages from "./apis/CSNotionPages.tsx";
+// import BasicTable from './MyTable'
+import CSNotionPages from "./apis/CSNotionPages.tsx";
 
 import './App.css'
 
@@ -39,8 +40,9 @@ function OldApp() {
 function App() {
   return(
     <>
-    {/* <CSNotionPages/> */}
-    <BasicTable/>
+        {/* <CustomTable/> */}
+    <CSNotionPages/>
+    {/* <BasicTable/> */}
     {/* <OldApp/> */}
     </>
   )

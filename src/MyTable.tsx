@@ -54,4 +54,4 @@ const CustomTable = (props: { thePages: Page[] }) => {
   );
 };
 
-export { CustomTable };
+export default CustomTable;

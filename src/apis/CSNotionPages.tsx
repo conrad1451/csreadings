@@ -3,8 +3,8 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {BasicTable, CustomTable} from "../MyTable";
-
+// import {BasicTable, CustomTable} from "../MyTable";
+import CustomTable from "../MyTable";
 // const databaseId = process.env.CS_CONTENT;
 
 interface Page {
