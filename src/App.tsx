@@ -3,6 +3,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
 import BasicTable from './MyTable'
+// import CSNotionPages from "./apis/CSNotionPages.tsx";
+
 import './App.css'
 
 function OldApp() {
@@ -37,8 +39,9 @@ function OldApp() {
 function App() {
   return(
     <>
+    {/* <CSNotionPages/> */}
     <BasicTable/>
-    <OldApp/>
+    {/* <OldApp/> */}
     </>
   )
 }

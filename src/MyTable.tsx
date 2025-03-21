@@ -7,6 +7,22 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+interface Page {
+    name: string;
+    tags: string[];
+  }
+
+function createCustomTableData(name: string, tags: string[]) {
+    return { name, tags };
+  }
+  
+function mapPagesToCustomTableData(pages: Page[]) {
+return pages.map((page) => createCustomTableData(page.name, page.tags));
+}
+
+
+
+
 function createData(
   name: string,
   calories: number,
@@ -25,7 +41,7 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
-export default function BasicTable() {
+const BasicTable = ( ) => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -58,3 +74,49 @@ export default function BasicTable() {
     </TableContainer>
   );
 }
+
+const CustomTable = (props: {thePages: Page[]} ) => {
+    const customTableData = mapPagesToCustomTableData(props.thePages);
+
+
+    function concatenateArrayToString(arr: string[]): string {
+        return arr.reduce((accumulator, currentValue) => accumulator + currentValue, "");
+      }
+      
+      // Example usage:
+      const myArray: string[] = ["Hello", " ", "World", "!"];
+      const concatenatedString: string = concatenateArrayToString(myArray);
+
+
+    return (
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="right">Name</TableCell>
+              <TableCell align="right">Tags</TableCell> 
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {customTableData.map((row) => (
+              <TableRow
+                key={row.name}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                <TableCell align="right">{row.name}</TableCell>
+                <TableCell align="right">{concatenateArrayToString(row.tags)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
+  
+  export { BasicTable, CustomTable };
+// export default BasicTable;
+
+// export CustomTable;
