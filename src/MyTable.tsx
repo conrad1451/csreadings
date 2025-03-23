@@ -7,6 +7,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+import { useState } from "react";
+
 interface Page {
   name: string;
   tags: string[];
@@ -22,15 +24,27 @@ function mapPagesToCustomTableData(pages: Page[]) {
 
 const CustomTable = (props: { thePages: Page[] }) => {
   const customTableData = mapPagesToCustomTableData(props.thePages);
+  const [curPage, setCurPage] = useState(0);
+
 
   function concatenateArrayToString(arr: string[]): string {
     return arr.reduce((accumulator, currentValue) => accumulator + (currentValue + " || "), "");
   }
 
+  
+  const handlePageChange = (event: any) => {
+    event.preventDefault();
+    setCurPage((curPage + 1) % 2);
+  };
+
   // Filter out rows with blank names
   const filteredData = customTableData.filter((row) => row && row.name && row.name.trim() !== "");
 
   return (
+    <>
+    <button type="submit" onClick={handlePageChange}>
+      Change View
+    </button>
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -56,6 +70,7 @@ const CustomTable = (props: { thePages: Page[] }) => {
         </TableBody>
       </Table>
     </TableContainer>
+    </>
   );
 };
 
