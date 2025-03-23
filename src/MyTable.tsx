@@ -32,7 +32,7 @@ const CustomTable = (props: { thePages: Page[] }) => {
   function concatenateArrayToString(arr: string[]): string {
     return arr.reduce((accumulator, currentValue) => accumulator + (currentValue + " || "), "");
   }
-  const numOptions = 4;
+  const numOptions = 5;
   
   const handlePageChange = (event: any) => {
     event.preventDefault();
@@ -40,24 +40,31 @@ const CustomTable = (props: { thePages: Page[] }) => {
     setCurPage(newPage);
     setTableData(filterChoice(newPage)); //Gemini
   };
-  
+
+  const filterList = ["All", "Potential Resource", "ReactJS", "CS Tools", "FreeCodeCamp"];
+
   const filterChoice = ( theSelection: number) => {
     switch (theSelection) {
       case 0:
         return filteredData;
        case 1:
         // return  filteredData.filter((row) => row && row.tags.filter((tag) => tag.search("Codesandbox")));
-        return filteredData.filter((row) => row.tags.some((str:string) => typeof str === 'string' && str.includes("Potential Resource")));
+        return filteredData.filter((row) => row.tags.some((str:string) => typeof str === 'string' && str.includes(filterList[1])));
   
       case 2:
         // return  filteredData.filter((row) => row && row.tags.filter((tag) => tag.search("flask")));
         // return filteredData.filter((_, index) => index % 5 === 0); // CHQ: this works, nice
-        return filteredData.filter((row) => row.tags.some((str:string) => typeof str === 'string' && str.includes("ReactJS")));
+        return filteredData.filter((row) => row.tags.some((str:string) => typeof str === 'string' && str.includes(filterList[2])));
  
       case 3:
         // return  filteredData.filter((row) => row && row.tags.filter((tag) => tag.search("flask")));
         // return filteredData.filter((_, index) => index % 5 === 0); // CHQ: this works, nice
-        return filteredData.filter((row) => row.tags.some((str:string) => typeof str === 'string' && str.includes("FreeCodeCamp"))); 
+        return filteredData.filter((row) => row.tags.some((str:string) => typeof str === 'string' && str.includes(filterList[3]))); 
+
+      case 4:
+        // return  filteredData.filter((row) => row && row.tags.filter((tag) => tag.search("flask")));
+        // return filteredData.filter((_, index) => index % 5 === 0); // CHQ: this works, nice
+        return filteredData.filter((row) => row.tags.some((str:string) => typeof str === 'string' && str.includes(filterList[4]))); 
 
       default:
         // return  filteredData.filter((row) => row && row.tags.filter((tag) => tag.search("bye")));
@@ -68,7 +75,6 @@ const CustomTable = (props: { thePages: Page[] }) => {
   // Filter out rows with blank names
   const filteredData = customTableData.filter((row) => row && row.name && row.name.trim() !== "");
 
-  const filterList = ["All", "Potential Resource", "ReactJS", "FreeCodeCamp"];
   return (
     <>
      <button type="submit" onClick={handlePageChange}>
