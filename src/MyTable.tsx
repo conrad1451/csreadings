@@ -84,17 +84,21 @@ const CustomTable = (props: { thePages: Page[] }) => {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
+              <TableCell align="left">#</TableCell>
               <TableCell align="left">Name</TableCell>
               <TableCell align="left">Tags</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((row) => (
+          {tableData.map((row, index) => (
               row && row.name ? ( // Safety Check
                 <TableRow
                   key={row.name}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
+                  <TableCell component="th" scope="row">
+                    {index+1}
+                  </TableCell>
                   <TableCell component="th" scope="row">
                     {row.name}
                   </TableCell>
