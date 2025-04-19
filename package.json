@@ -16,7 +16,8 @@
     "axios": "^1.8.4",
     "material-react-table": "^3.2.1",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^7.5.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
