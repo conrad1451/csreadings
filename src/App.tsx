@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
-import CSNotionPages from "./apis/CSNotionPages.tsx";
+// import CSNotionPages from "./apis/CSNotionPages.tsx";
+import CSNotionPages2 from './apis/CSNotionPages2.tsx';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import './App.css'
@@ -66,7 +67,7 @@ function App() {
       <Routes>
         <Route path="/" element={<NavigationButtons />} />
         <Route path="/orig" element={<OldApp/>} />
-        <Route path="/compscilearning" element={  <CSNotionPages/>} />
+        <Route path="/compscilearning" element={  <CSNotionPages2/>} />
       </Routes>
     </Router>    
     </>
