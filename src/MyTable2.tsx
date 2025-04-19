@@ -6,7 +6,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button'; 
-import axios from 'axios'; // Import axios
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -92,39 +91,6 @@ const CustomTable = (props: { thePages: Page[]; setPages: React.Dispatch<React.S
       </> 
     )
   }
-
-  const handleButtonClick = async (rowId: string, index: number) => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_CAREER_SOURCE}/pagecontent/${rowId}`);
-      const pageText = response.data.pageText;
-
-      const updatedTableData = tableData.map((row, i) => {
-        if (i === index) {
-          return { ...row, pageContent: pageText };
-        }
-        return row;
-      });
-
-      setTableData(updatedTableData);
-
-      // Update the main pages state
-      const updatedPages = props.thePages.map((page) => {
-        if (page.id === rowId) {
-          return { ...page, pageContent: pageText };
-        }
-        return page;
-      });
-      props.setPages(updatedPages);
-    } catch (error) {
-      console.error('Error fetching page content:', error);
-    }
-  };
-
-  // CHQ: added by Gemini AI to enable modal appearance
-  const handleOpenModal = (content: string) => {
-    setModalContent(content);
-    setModalOpen(true);
-  };
 
   const handleCloseModal = () => {
     setModalOpen(false);
