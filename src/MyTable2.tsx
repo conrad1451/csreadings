@@ -106,7 +106,8 @@ const CustomTable = (props: { thePages: Page[]; setPages: React.Dispatch<React.S
 
     // CHQ: added by Gemini AI to enable text field which handles filtering
   const handleToggleFilter = () => {
-    setFilterEnabled(!filterEnabled);
+    // setFilterEnabled(!filterEnabled);
+    setFilterEnabled(false);
     if (!filterEnabled) {
       setTableData(customTableData.filter((row) => row && row.Name && row.Name.trim() !== ''));
     }
@@ -214,7 +215,8 @@ Then, the parts array would be:
     <>
      {/*CHQ: added by Gemini AI*/} 
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Typography>Filter Page Content:</Typography>
+          <Typography>(Filter Toggle is disabled until further notice)</Typography>
+          {/* <Typography>Filter Page Content:</Typography> */}
           <Switch checked={filterEnabled} onChange={handleToggleFilter} />
           {filterEnabled && (
               <>
