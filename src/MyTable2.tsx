@@ -302,8 +302,6 @@ Then, the parts array would be:
                           }}
                       >
                           Notion Page URL</TableCell>
-                      <TableCell align="left" width={'5%'}>Fetch Page Content</TableCell>
-                      <TableCell align="left" width={'5%'}>Page Content</TableCell>
                   </TableRow>
               </TableHead>
               <TableBody>
@@ -340,18 +338,6 @@ Then, the parts array would be:
                                   <a href={row.PageURL} target="_blank" rel="noopener noreferrer">
                                       {row.PageURL}
                                   </a>
-                              </TableCell>
-                              <TableCell align="left">
-                                  <Button variant="contained" onClick={() => handleButtonClick(row.myID, index)}>
-                                      Fetch Content
-                                  </Button>
-                              </TableCell>
-                              <TableCell align="left">
-                                  {row.pageContent && (
-                                      <Button variant="outlined" onClick={() => handleOpenModal(row.pageContent)}>
-                                          View Content
-                                      </Button>
-                                  )}
                               </TableCell>
                           </TableRow>
                       ) : null
