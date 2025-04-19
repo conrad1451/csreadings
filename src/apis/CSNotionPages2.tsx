@@ -67,19 +67,19 @@ const ReturnFormat2 = (props: {
 const CSNotionPages2 = () => {
   const [pages, setPages] = useState<Page[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const dataSource = import.meta.env.VITE_CAREER_SOURCE;
-  const infoChoices = [
-    "/interviews",
-    "/kristenamy",
-    "/bonnie",
-    "/bernadette",
-    "/mikepeditto",
-    "/careeradjacent",
-    "/onetag",
-    "/twotags", 
-    "/threetags"
-  ];
-  const [choiceIndex, setChoiceIndex] = useState<number>(infoChoices.length - 2); // Start at "/careeradjacent"
+  const dataSource = import.meta.env.VITE_TABLE_DATA_SOURCE;
+//   const infoChoices = [
+//     "/interviews",
+//     "/kristenamy",
+//     "/bonnie",
+//     "/bernadette",
+//     "/mikepeditto",
+//     "/careeradjacent",
+//     "/onetag",
+//     "/twotags", 
+//     "/threetags"
+//   ];
+//   const [choiceIndex, setChoiceIndex] = useState<number>(infoChoices.length - 2); // Start at "/careeradjacent"
   // const [selectedTag, setSelectedTag] = useState<string | null>(null); // State for selected tag
   // const [availableTags, setAvailableTags] = useState<string[]>([]);
 
@@ -105,21 +105,21 @@ const CSNotionPages2 = () => {
         }
     }
 
-  useEffect(() => {
-    fetchData(choiceIndex);
-  }, [choiceIndex]);
+//   useEffect(() => {
+//     fetchData(choiceIndex);
+//   }, [choiceIndex]);
 
-  const handleLeftClick = () => {
-    setChoiceIndex((prevIndex) => {
-      return (prevIndex - 1) % infoChoices.length;
-    });
-  };
+//   const handleLeftClick = () => {
+//     setChoiceIndex((prevIndex) => {
+//       return (prevIndex - 1) % infoChoices.length;
+//     });
+//   };
 
-  const handleRightClick = () => {
-    setChoiceIndex((prevIndex) => {
-      return (prevIndex + 1) % infoChoices.length;
-    });
-  };
+//   const handleRightClick = () => {
+//     setChoiceIndex((prevIndex) => {
+//       return (prevIndex + 1) % infoChoices.length;
+//     });
+//   };
 
   // const handleTagChange = (value: string) => {
   //   setSelectedTag(value);
@@ -143,11 +143,11 @@ const CSNotionPages2 = () => {
 
   return (
     <div>
-      <div className="flex justify-center items-center gap-4 mb-4">
+      {/* <div className="flex justify-center items-center gap-4 mb-4">
         <Button onClick={handleLeftClick}>Left</Button>
         <h4>{infoChoices[choiceIndex]}</h4>
         <Button onClick={handleRightClick}>Right</Button>
-      </div>
+      </div> */}
       <div></div>
       {/* <Select defaultValue="dog">
         <Option value="dog">Dog</Option>
