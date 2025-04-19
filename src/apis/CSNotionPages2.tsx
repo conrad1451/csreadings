@@ -5,18 +5,10 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";  
-// import {BasicTable, CustomTable} from "../MyTable";
 import CustomTable from "../MyTable2";
 // const databaseId = process.env.CS_CONTENT;
-import Button from '@mui/material/Button';
  
-// import Select from "@mui/joy/Select";
-// import SelectContent from "@mui/joy/Select";
-// import SelectItem from "@mui/joy/Select";
-// import SelectTrigger from "@mui/joy/Select";
-// import SelectValue from "@mui/joy/Select";
-
-// import Option from "@mui/joy/Option";
+ 
 interface Page {
   id: string;
   Name: string;
@@ -28,30 +20,6 @@ interface Page {
   PageURL: string;
   pageContent: string;
 }
-
-// const ReturnFormat1 = (props: {thePages: Page[]}) => {
-//     return (
-//         <div>
-//           {props.thePages.map((page) => (
-//             <div key={page.name}>
-//               <p>
-//                 {"Name -->"} {page.name}:
-//               </p>
-//               <p>
-//                 {"Tags --> "}
-//                 {page.tags.map((tag) => (
-//                   <span key={tag}>
-//                     {tag + " || "}
-//                   </span>
-//                 ))}
-//               </p>
-//               <br />
-//               <br />
-//             </div>
-//           ))}
-//         </div>
-//     );
-// }
 
 const ReturnFormat2 = (props: {
   thePages: Page[];
@@ -68,27 +36,12 @@ const CSNotionPages2 = () => {
   const [pages, setPages] = useState<Page[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dataSource = import.meta.env.VITE_TABLE_DATA_SOURCE;
-//   const infoChoices = [
-//     "/interviews",
-//     "/kristenamy",
-//     "/bonnie",
-//     "/bernadette",
-//     "/mikepeditto",
-//     "/careeradjacent",
-//     "/onetag",
-//     "/twotags", 
-//     "/threetags"
-//   ];
-//   const [choiceIndex, setChoiceIndex] = useState<number>(infoChoices.length - 2); // Start at "/careeradjacent"
-  // const [selectedTag, setSelectedTag] = useState<string | null>(null); // State for selected tag
-  // const [availableTags, setAvailableTags] = useState<string[]>([]);
-
-  // const [theTags, setTheTags] = useState<string[]>([]);
+ 
   
-    const fetchData = async (index: number) => {
+    const fetchData = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.get(dataSource + infoChoices[index]);
+            const response = await axios.get(dataSource);
             const theData: Page[] = response.data;
             setPages(theData);
 
@@ -105,9 +58,9 @@ const CSNotionPages2 = () => {
         }
     }
 
-//   useEffect(() => {
-//     fetchData(choiceIndex);
-//   }, [choiceIndex]);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
 //   const handleLeftClick = () => {
 //     setChoiceIndex((prevIndex) => {
@@ -121,17 +74,17 @@ const CSNotionPages2 = () => {
 //     });
 //   };
 
-  // const handleTagChange = (value: string) => {
-  //   setSelectedTag(value);
-  //   // Filter pages based on the selected tag.
-  //   if (value) { // Only filter if a tag is actually selected.  If value is null, show all.
-  //       const filteredPages = pages.filter(page => page.Tags.includes(value));
-  //       setPages(filteredPages); // Update the displayed pages
-  //   }
-  //   else{
-  //       fetchData(choiceIndex);
-  //   }
-  // };
+//   const handleTagChange = (value: string) => {
+//     setSelectedTag(value);
+//     // Filter pages based on the selected tag.
+//     if (value) { // Only filter if a tag is actually selected.  If value is null, show all.
+//         const filteredPages = pages.filter(page => page.Tags.includes(value));
+//         setPages(filteredPages); // Update the displayed pages
+//     }
+//     else{
+//         fetchData();
+//     }
+//   };
 
   // const handleSetTags = (value: string) =>{
   //   setTheTags(value => theTags.concat(value))
