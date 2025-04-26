@@ -12,6 +12,12 @@ import CustomTable from "../MyTable2";
 interface Page {
   id: string;
   Name: string;
+  CreatedTime: Date;
+  EditedTime: Date;
+  CreatedStart: Date;
+  CreatedEnd: Date;
+  PublishedStart: Date;
+  PublishedEnd: Date;
   Area: string;
   Source: string;
   Link: string;
@@ -23,11 +29,10 @@ interface Page {
 
 const ReturnFormat2 = (props: {
   thePages: Page[];
-  setPages: React.Dispatch<React.SetStateAction<Page[]>>;
 }) => {
   return (
     <div>
-      <CustomTable thePages={props.thePages} setPages={props.setPages} />
+      <CustomTable thePages={props.thePages} />
     </div>
   );
 };
@@ -108,7 +113,7 @@ const CSNotionPages2 = () => {
       </Select> */}
       {/* <Button onClick={handleSetTags}>Add to filtering</Button> */}
       <text>Tags included in filtering:</text>
-      <ReturnFormat2 thePages={pages} setPages={setPages} />
+      <ReturnFormat2 thePages={pages} />
     </div>
   );
 };
