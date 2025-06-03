@@ -321,13 +321,7 @@ const CustomTable = (props: { thePages: Page[] }) => {
                       overflowWrap: "break-word",
                     }}
                   >
-                    <a
-                      href={row.Link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {row.Link}
-                    </a>
+                    {displayURL(row.Link)}
                   </TableCell>
                   <TableCell align="left">{row.Type}</TableCell>
                   <TableCell align="left">
@@ -340,13 +334,7 @@ const CustomTable = (props: { thePages: Page[] }) => {
                       overflowWrap: "break-word",
                     }}
                   >
-                    <a
-                      href={row.PageURL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {row.PageURL}
-                    </a>
+                    {displayURL(row.PageURL)}
                   </TableCell>
                   {/* <TableCell align="left">
                                       <Button variant="contained" onClick={() => handleButtonClick(row.myID, index)}>
