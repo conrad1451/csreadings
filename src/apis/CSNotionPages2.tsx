@@ -1,14 +1,12 @@
 // Source:
 // [1]: https://www.freecodecamp.org/news/how-to-fetch-api-data-in-react/
-// [2]: https://refine.dev/blog/material-ui-select-component/ 
-
+// [2]: https://refine.dev/blog/material-ui-select-component/
 
 import { useEffect, useState } from "react";
-import axios from "axios";  
+import axios from "axios";
 import CustomTable from "../MyTable2";
 // const databaseId = process.env.CS_CONTENT;
- 
- 
+
 interface Page {
   id: string;
   Name: string;
@@ -27,9 +25,7 @@ interface Page {
   pageContent: string;
 }
 
-const ReturnFormat2 = (props: {
-  thePages: Page[];
-}) => {
+const ReturnFormat2 = (props: { thePages: Page[] }) => {
   return (
     <div>
       <CustomTable thePages={props.thePages} />
@@ -41,55 +37,54 @@ const CSNotionPages2 = () => {
   const [pages, setPages] = useState<Page[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dataSource = import.meta.env.VITE_TABLE_DATA_SOURCE;
- 
-  
-    const fetchData = async () => {
-        setIsLoading(true);
-        try {
-            const response = await axios.get(dataSource);
-            const theData: Page[] = response.data;
-            setPages(theData);
 
-            // CHQ: Gemini AI: Extract all unique tags from the fetched pages
-            const tags = new Set<string>();
-            theData.forEach(page => {
-            page.Tags.forEach(tag => tags.add(tag));
-        });
-        // setAvailableTags(Array.from(tags));
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            setIsLoading(false);
-        }
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(dataSource);
+      const theData: Page[] = response.data;
+      setPages(theData);
+
+      // CHQ: Gemini AI: Extract all unique tags from the fetched pages
+      const tags = new Set<string>();
+      theData.forEach((page) => {
+        page.Tags.forEach((tag) => tags.add(tag));
+      });
+      // setAvailableTags(Array.from(tags));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-//   const handleLeftClick = () => {
-//     setChoiceIndex((prevIndex) => {
-//       return (prevIndex - 1) % infoChoices.length;
-//     });
-//   };
+  //   const handleLeftClick = () => {
+  //     setChoiceIndex((prevIndex) => {
+  //       return (prevIndex - 1) % infoChoices.length;
+  //     });
+  //   };
 
-//   const handleRightClick = () => {
-//     setChoiceIndex((prevIndex) => {
-//       return (prevIndex + 1) % infoChoices.length;
-//     });
-//   };
+  //   const handleRightClick = () => {
+  //     setChoiceIndex((prevIndex) => {
+  //       return (prevIndex + 1) % infoChoices.length;
+  //     });
+  //   };
 
-//   const handleTagChange = (value: string) => {
-//     setSelectedTag(value);
-//     // Filter pages based on the selected tag.
-//     if (value) { // Only filter if a tag is actually selected.  If value is null, show all.
-//         const filteredPages = pages.filter(page => page.Tags.includes(value));
-//         setPages(filteredPages); // Update the displayed pages
-//     }
-//     else{
-//         fetchData();
-//     }
-//   };
+  //   const handleTagChange = (value: string) => {
+  //     setSelectedTag(value);
+  //     // Filter pages based on the selected tag.
+  //     if (value) { // Only filter if a tag is actually selected.  If value is null, show all.
+  //         const filteredPages = pages.filter(page => page.Tags.includes(value));
+  //         setPages(filteredPages); // Update the displayed pages
+  //     }
+  //     else{
+  //         fetchData();
+  //     }
+  //   };
 
   // const handleSetTags = (value: string) =>{
   //   setTheTags(value => theTags.concat(value))
