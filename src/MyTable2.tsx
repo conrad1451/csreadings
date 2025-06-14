@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 
 import {
   Table,
@@ -22,6 +22,7 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
+import { SelectChangeEvent } from "@mui/material/Select";
 
 import BasicDownshift from "./BasicDropdownList";
 
@@ -294,19 +295,36 @@ const DescendingSortButton = (props: {
   );
 };
 
-const ResetButton = (props: {
-  theFontSize: string;
-  theMinWidth: string;
-  thePadding: string;
-  theMargin: string;
-  theVisibility: boolean;
-  resetFunction: () => void;
-}) => {
+// const ResetButton = React.forwardRef(
+//   (
+//     props: {
+//       theFontSize: string;
+//       theMinWidth: string;
+//       thePadding: string;
+//       theMargin: string;
+//       theVisibility: boolean;
+//       resetFunction: () => void;
+//     },
+//     ref
+//   ) => {
+//     // Add ref as the second argument
+//     return (
+// Modify ResetButton
+const ResetButton = React.forwardRef<
+  HTMLButtonElement,
+  {
+    theFontSize: string;
+    theMinWidth: string;
+    thePadding: string;
+    theMargin: string;
+    theVisibility: boolean;
+    resetFunction: () => void;
+  }
+>((props, ref) => {
   return (
     <>
       <Button
         onClick={() => props.resetFunction()}
-        // title="Ascending"
         title="Reset"
         style={{
           fontSize: props.theFontSize,
@@ -315,13 +333,13 @@ const ResetButton = (props: {
           margin: props.theMargin,
           visibility: props.theVisibility ? "visible" : "hidden",
         }}
+        ref={ref} // This ref is now typed as HTMLButtonElement
       >
         🔄
       </Button>
     </>
   );
-};
-
+});
 const MultiSelectFilterSection = (props: {
   sectionText: string;
   labelText: string;
@@ -389,13 +407,28 @@ const CustomTable = (props: { thePages: Page[] }) => {
   const [defaultListOrderNames, setDefaultListOrderNames] = useState<string[]>(
     []
   );
-
   const [ascendingListOrderNames, setAscendingListOrderNames] = useState<
     string[]
   >([]);
   const [descendingListOrderNames, setDescendingListOrderNames] = useState<
     string[]
   >([]);
+
+  const [defaultListOrderCreatedTime, setDefaultListOrderCreatedTime] =
+    useState<string[]>([]);
+  const [ascendingListOrderCreatedTime, setAscendingListOrderCreatedTime] =
+    useState<string[]>([]);
+  const [descendingListOrderCreatedTime, setDescendingListOrderCreatedTime] =
+    useState<string[]>([]);
+
+  const [defaultListOrderEditedTime, setDefaultListOrderEditedTime] = useState<
+    string[]
+  >([]);
+
+  const [ascendingListOrderEditedTime, setAscendingListOrderEditedTime] =
+    useState<string[]>([]);
+  const [descendingListOrderEditedTime, setDescendingListOrderEditedTime] =
+    useState<string[]>([]);
   const tableData = customTableData.filter(
     (row) => row && row.Name && row.Name.trim() !== ""
   );
@@ -413,6 +446,14 @@ const CustomTable = (props: { thePages: Page[] }) => {
     "asc" | "desc" | null
   >(null);
 
+  const [sortDirectionCreatedTime, setSortDirectionCreatedTime] = useState<
+    "asc" | "desc" | null
+  >(null);
+
+  const [sortDirectionEditedTime, setSortDirectionEditedTime] = useState<
+    "asc" | "desc" | null
+  >(null);
+
   const [tagNameList, setTagNameList] = useState<Array<string>>([""]);
 
   const resetTagFilters = () => {
@@ -422,16 +463,16 @@ const CustomTable = (props: { thePages: Page[] }) => {
   // Update global default lists on initial load and when the data changes
   useEffect(() => {
     setDefaultListOrderNames(tableData.map((item) => item.Name));
-    // setDefaultListOrderDateFound(
-    //   tableData.map((item) =>
-    //     item.DateFound instanceof Date ? item.DateFound.toISOString() : "-"
-    //   )
-    // );
-    // setDefaultListOrderDayPosted(
-    //   tableData.map((item) =>
-    //     item.DayPosted instanceof Date ? item.DayPosted.toISOString() : "-"
-    //   )
-    // );
+    setDefaultListOrderCreatedTime(
+      tableData.map((item) =>
+        item.CreatedTime instanceof Date ? item.CreatedTime.toISOString() : "-"
+      )
+    );
+    setDefaultListOrderEditedTime(
+      tableData.map((item) =>
+        item.EditedTime instanceof Date ? item.EditedTime.toISOString() : "-"
+      )
+    );
   }, [tableData]);
 
   const nameSorter = (a: RowPage, b: RowPage) => {
@@ -446,10 +487,45 @@ const CustomTable = (props: { thePages: Page[] }) => {
     return 0;
   };
 
+  const createdTimeSorter = (a: RowPage, b: RowPage) => {
+    const dateA = a.CreatedTime ? new Date(a.CreatedTime).getTime() : -Infinity;
+    const dateB = b.CreatedTime ? new Date(b.CreatedTime).getTime() : -Infinity;
+    if (dateA < dateB) {
+      return sortDirectionCreatedTime === "asc" ? -1 : 1;
+    }
+    if (dateA > dateB) {
+      return sortDirectionCreatedTime === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
+  const editedTimeSorter = (a: RowPage, b: RowPage) => {
+    const dateA = a.EditedTime ? new Date(a.EditedTime).getTime() : -Infinity;
+    const dateB = b.EditedTime ? new Date(b.EditedTime).getTime() : -Infinity;
+    if (dateA < dateB) {
+      return sortDirectionEditedTime === "asc" ? -1 : 1;
+    }
+    if (dateA > dateB) {
+      return sortDirectionEditedTime === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
   const resetNameSort = () => {
     setSortDirectionName(null);
     setAscendingListOrderNames([]);
     setDescendingListOrderNames([]);
+  };
+
+  const resetCreatedTimeSort = () => {
+    setSortDirectionCreatedTime(null);
+    setAscendingListOrderCreatedTime([]);
+    setDescendingListOrderCreatedTime([]);
+  };
+  const resetEditedTimeSort = () => {
+    setSortDirectionEditedTime(null);
+    setAscendingListOrderEditedTime([]);
+    setDescendingListOrderEditedTime([]);
   };
 
   const [pageFilterEnabled, setPageFilterEnabled] = useState(false);
@@ -535,6 +611,14 @@ const CustomTable = (props: { thePages: Page[] }) => {
     setSortDirectionName(direction);
   };
 
+  const handleCreatedTimeSort = (direction: "asc" | "desc") => {
+    setSortDirectionCreatedTime(direction);
+  };
+
+  const handleEditedTimeSort = (direction: "asc" | "desc") => {
+    setSortDirectionEditedTime(direction);
+  };
+
   const filteredTableData = useMemo(() => {
     let currentFilteredData = tableData.filter((row: RowPage) => {
       const nameMatch =
@@ -591,6 +675,24 @@ const CustomTable = (props: { thePages: Page[] }) => {
     (sortDirectionName === "desc" &&
       JSON.stringify(descendingListOrderNames) ===
         JSON.stringify(defaultListOrderNames));
+
+  const isCreatedTimeDefaultSort =
+    sortDirectionCreatedTime === null ||
+    (sortDirectionCreatedTime === "asc" &&
+      JSON.stringify(ascendingListOrderCreatedTime) ===
+        JSON.stringify(defaultListOrderCreatedTime)) ||
+    (sortDirectionCreatedTime === "desc" &&
+      JSON.stringify(descendingListOrderCreatedTime) ===
+        JSON.stringify(defaultListOrderCreatedTime));
+
+  const isEditedTimeDefaultSort =
+    sortDirectionEditedTime === null ||
+    (sortDirectionEditedTime === "asc" &&
+      JSON.stringify(ascendingListOrderEditedTime) ===
+        JSON.stringify(defaultListOrderEditedTime)) ||
+    (sortDirectionEditedTime === "desc" &&
+      JSON.stringify(descendingListOrderEditedTime) ===
+        JSON.stringify(defaultListOrderEditedTime));
 
   const tagList = producePropList(sortedTableData, "Tags");
   //   const [choiceIndex, setChoiceIndex] = useState<number>(0);
@@ -716,10 +818,80 @@ const CustomTable = (props: { thePages: Page[] }) => {
                 Source
               </TableCell>
               <TableCell align="left" width={"4%"}>
-                Created Time
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  Created Time
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      ml: 1,
+                    }}
+                  >
+                    <AscendingSortButton
+                      theFontSize="8px"
+                      theMinWidth="auto"
+                      thePadding="2px"
+                      theMargin="0px"
+                      theVisibility={true}
+                      sortFunction={handleCreatedTimeSort}
+                    />
+                    <DescendingSortButton
+                      theFontSize="8px"
+                      theMinWidth="auto"
+                      thePadding="2px"
+                      theMargin="0px"
+                      theVisibility={true}
+                      sortFunction={handleCreatedTimeSort}
+                    />
+                  </Box>
+                  <ResetButton
+                    theFontSize="8px"
+                    theMinWidth="auto"
+                    thePadding="0px"
+                    theMargin="0px"
+                    theVisibility={!isCreatedTimeDefaultSort}
+                    resetFunction={resetCreatedTimeSort}
+                  />
+                </Box>
               </TableCell>
               <TableCell align="left" width={"4%"}>
-                Edited Time
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  Edited Time
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      ml: 1,
+                    }}
+                  >
+                    <AscendingSortButton
+                      theFontSize="8px"
+                      theMinWidth="auto"
+                      thePadding="2px"
+                      theMargin="0px"
+                      theVisibility={true}
+                      sortFunction={handleEditedTimeSort}
+                    />
+                    <DescendingSortButton
+                      theFontSize="8px"
+                      theMinWidth="auto"
+                      thePadding="2px"
+                      theMargin="0px"
+                      theVisibility={true}
+                      sortFunction={handleEditedTimeSort}
+                    />
+                  </Box>
+                  <ResetButton
+                    theFontSize="8px"
+                    theMinWidth="auto"
+                    thePadding="0px"
+                    theMargin="0px"
+                    theVisibility={!isEditedTimeDefaultSort}
+                    resetFunction={resetEditedTimeSort}
+                  />
+                </Box>
               </TableCell>
               <TableCell
                 className="link-column"
@@ -762,7 +934,7 @@ const CustomTable = (props: { thePages: Page[] }) => {
             {tableView.map((row, index) =>
               row && row.Name ? (
                 <TableRow
-                  key={row.Name}
+                  key={row.myID}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
