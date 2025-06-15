@@ -3,40 +3,36 @@
 
 // import { createCustomTableData } from "../../src/MyTable2";
 
-import { it, expect, describe, afterEach, vi } from "vitest";
-// Add the Item interface from your original component
-interface Item {
-  value: string;
-}
+import { it, expect, describe } from "vitest";
 
-// Define the interface for the props that BasicDownshift expects
-interface BasicDownshiftProps {
-  items: Item[];
-  labelText: string;
-  handlethechange: (selection: Item | null) => void;
-}
+// import { it, expect, describe, afterEach, vi } from "vitest";
+// // Add the Item interface from your original component
+// interface Item {
+//   value: string;
+// }
+
+// // Define the interface for the props that BasicDownshift expects
+// interface BasicDownshiftProps {
+//   items: Item[];
+//   labelText: string;
+//   handlethechange: (selection: Item | null) => void;
+// }
 interface Page {
   id: string;
   Name: string;
-  Status: string;
-  Level: string;
-  Source: string[];
-  DateFound: Date;
-  DayPosted: Date;
-  ApplicationDeadline: Date;
-  DateApplied: Date;
-  ExpireDate: Date;
-  PostingURL: string;
-  Connection: string;
-  State: string[];
-  Setup: string[];
-  Company: string[];
-  Education: string[];
-  Duties: string[];
+  CreatedTime: Date;
+  EditedTime: Date;
+  CreatedStart: Date;
+  CreatedEnd: Date;
+  PublishedStart: Date;
+  PublishedEnd: Date;
+  Area: string;
+  Source: string;
+  Link: string;
+  Type: string;
   Tags: string[];
-  Tenure: string[];
-  Location: string;
   PageURL: string;
+  pageContent: string;
 }
 
 interface RowPage {
@@ -56,126 +52,134 @@ interface RowPage {
   PageURL: string;
   pageContent: string;
 }
-
 import { createCustomTableData } from "../../src/customDataTable";
 
 // --- Mock Data ---
 // Creating a diverse set of mock pages to test various filters and sorts
+
+// CHQ: Gemini AI made this function
+/**
+ * Generates a random date within a specified range.
+ * @returns A Date object.
+ */
+function getRandomDate(): Date {
+  const start = new Date(2023, 0, 1); // Jan 1, 2023
+  const end = new Date(2025, 11, 31); // Dec 31, 2025
+  const randomTimestamp =
+    start.getTime() + Math.random() * (end.getTime() - start.getTime());
+  return new Date(randomTimestamp);
+}
+
+// CHQ: Gemini AI made this function
+/**
+ * Generates a random string of a given length.
+ * @param length The length of the string.
+ * @returns A random string.
+ */
+function getRandomString(length: number): string {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+// CHQ: Gemini AI made this function
+/**
+ * Generates a random Page object with the 'Area' property set to "CS".
+ * @param id The ID for the new page.
+ * @returns A randomly generated Page object.
+ */
+function generateRandomCSPage(id: string): Page {
+  return {
+    id: id,
+    Name: `Random CS Project ${getRandomString(5)}`,
+    CreatedTime: getRandomDate(),
+    EditedTime: getRandomDate(),
+    CreatedStart: getRandomDate(),
+    CreatedEnd: getRandomDate(),
+    PublishedStart: getRandomDate(),
+    PublishedEnd: getRandomDate(),
+    Area: "CS", // Explicitly set to "CS" as requested
+    Source: `Source ${getRandomString(3)}`,
+    Link: `https://example.com/cs-link-${getRandomString(7)}`,
+    Type: Math.random() > 0.5 ? "Article" : "Tutorial",
+    Tags: [
+      "CS",
+      Math.random() > 0.5 ? "Algorithms" : "Data Structures",
+      Math.random() > 0.5 ? "Web Dev" : "AI/ML",
+      getRandomString(4),
+    ],
+    PageURL: `https://notion.so/cs-page-${getRandomString(8)}`,
+    pageContent: `Randomly generated content for CS project ${getRandomString(100)}.`,
+  };
+}
+
 const mockPages: Page[] = [
   {
-    id: "1",
-    Name: "Frontend Engineer",
-    Status: "Applied",
-    Level: "Mid",
-    Source: ["LinkedIn", "Indeed"],
-    DateFound: new Date("2024-01-10T10:00:00Z"),
-    DayPosted: new Date("2024-01-05T09:00:00Z"),
-    ApplicationDeadline: new Date("2024-02-01T23:59:59Z"),
-    DateApplied: new Date("2024-01-15T11:00:00Z"),
-    ExpireDate: new Date("2024-03-01T00:00:00Z"),
-    PostingURL: "https://example.com/fe",
-    Connection: "John Doe",
-    State: ["Remote"],
-    Setup: ["Full-time"],
-    Company: ["TechCorp"],
-    Education: ["Bachelors"],
-    Duties: ["Develop UIs", "Collaborate"],
+    id: "0",
+    Name: "Progressive Web Apps in 100 Seconds Build a PWA from Scratch",
+    CreatedTime: new Date("2024-01-10T10:00:00Z"),
+    EditedTime: new Date("2024-01-05T09:00:00Z"),
+    CreatedStart: new Date("2024-02-01T23:59:59Z"),
+    CreatedEnd: new Date("2024-01-15T11:00:00Z"),
+    PublishedStart: new Date("2024-03-01T00:00:00Z"),
+    PublishedEnd: new Date("2024-03-01T00:00:00Z"),
+    Area: "CS",
+    Source: "Reddit",
+    Link: "https://reddit.com",
+    Type: "Article",
     Tags: ["React", "TypeScript", "Frontend"],
-    Tenure: ["Permanent"],
-    Location: "Remote",
     PageURL: "https://notion.so/fe1",
+    pageContent: "",
   },
   {
-    id: "2",
-    Name: "Backend Developer",
-    Status: "Interview",
-    Level: "Senior",
-    Source: ["Referral"],
-    DateFound: new Date("2024-01-08T14:00:00Z"),
-    DayPosted: new Date("2024-01-01T10:00:00Z"),
-    ApplicationDeadline: new Date("2024-01-25T23:59:59Z"),
-    DateApplied: new Date("2024-01-10T12:00:00Z"),
-    ExpireDate: new Date("2024-02-15T00:00:00Z"),
-    PostingURL: "https://example.com/be",
-    Connection: "Jane Smith",
-    State: ["On-site"],
-    Setup: ["Full-time"],
-    Company: ["InnovateX"],
-    Education: ["Masters"],
-    Duties: ["Design APIs", "Database management"],
-    Tags: ["Node.js", "Python", "Backend", "API"],
-    Tenure: ["Contract"],
-    Location: "New York, NY",
-    PageURL: "https://notion.so/be2",
+    id: "1",
+    Name: "Progressive Web Apps in 100 Seconds Build a PWA from Scratch",
+    CreatedTime: new Date("2024-01-10T10:00:00Z"),
+    EditedTime: new Date("2024-01-05T09:00:00Z"),
+    CreatedStart: new Date("2024-02-01T23:59:59Z"),
+    CreatedEnd: new Date("2024-01-15T11:00:00Z"),
+    PublishedStart: new Date("2024-03-01T00:00:00Z"),
+    PublishedEnd: new Date("2024-03-01T00:00:00Z"),
+    Area: "CS",
+    Source: "Reddit",
+    Link: "https://reddit.com",
+    Type: "Article",
+    Tags: ["React", "TypeScript", "Frontend"],
+    PageURL: "https://notion.so/fe1",
+    pageContent: "",
   },
-  {
-    id: "3",
-    Name: "Data Scientist",
-    Status: "Rejected",
-    Level: "Junior",
-    Source: ["Indeed"],
-    DateFound: new Date("2024-01-12T09:00:00Z"),
-    DayPosted: new Date("2024-01-07T08:00:00Z"),
-    ApplicationDeadline: new Date("2024-02-10T23:59:59Z"),
-    DateApplied: new Date("2024-01-18T10:00:00Z"),
-    ExpireDate: new Date("2024-03-10T00:00:00Z"),
-    PostingURL: "https://example.com/ds",
-    Connection: "https://example2.com/qag",
-    State: ["Hybrid"],
-    Setup: ["Full-time"],
-    Company: ["DataFlow"],
-    Education: ["PhD"],
-    Duties: ["Statistical modeling", "Machine learning"],
-    Tags: ["Python", "Machine Learning"],
-    Tenure: ["Permanent"],
-    Location: "San Francisco, CA",
-    PageURL: "https://notion.so/ds3",
-  },
-  {
-    id: "4",
-    Name: "QA Engineer",
-    Status: "Applied",
-    Level: "Mid",
-    Source: ["Glassdoor"],
-    DateFound: new Date("2024-01-11T13:00:00Z"),
-    DayPosted: new Date("2024-01-06T11:00:00Z"),
-    ApplicationDeadline: new Date("2024-02-05T23:59:59Z"),
-    DateApplied: new Date("2024-01-16T14:00:00Z"),
-    ExpireDate: new Date("2024-03-05T00:00:00Z"),
-    PostingURL: "https://example.com/qa",
-    Connection: "https://example2.com/qag",
-    State: ["Remote"],
-    Setup: ["Full-time"],
-    Company: ["TechCorp"],
-    Education: ["Bachelors"],
-    Duties: ["Test software", "Automate tests"],
-    Tags: ["QA", "Testing", "Automation"],
-    Tenure: ["Permanent"],
-    Location: "Remote",
-    PageURL: "https://notion.so/qa4",
-  },
+  // Replaced with randomly generated data in the new order
+  generateRandomCSPage("2"),
+  generateRandomCSPage("3"),
 ];
+
 describe("createCustomTableData", () => {
   it("should correctly join Source array into a string", () => {
+    const targetPage = mockPages[1];
+
     const rowPage: RowPage = createCustomTableData(
-      mockPages[0].id,
-      mockPages[0].Name,
-      mockPages[0].Status,
-      mockPages[0].Level,
-      mockPages[0].Source.join(" | "),
-      mockPages[0].DateFound,
-      mockPages[0].DayPosted,
-      mockPages[0].ApplicationDeadline,
-      mockPages[0].DateApplied,
-      mockPages[0].ExpireDate,
-      mockPages[0].PostingURL,
-      mockPages[0].Connection,
-      mockPages[0].State,
-      mockPages[0].Setup,
-      mockPages[0].Company
-      //   mockPages[0].PageURL
+      targetPage.id,
+      targetPage.Name,
+      targetPage.CreatedTime,
+      targetPage.EditedTime,
+      targetPage.CreatedStart,
+      targetPage.CreatedEnd,
+      targetPage.PublishedStart,
+      targetPage.PublishedEnd,
+      targetPage.Area,
+      targetPage.Source,
+      targetPage.Link,
+      targetPage.Type,
+      targetPage.Tags,
+      targetPage.PageURL,
+      targetPage.pageContent
     );
-    expect(rowPage.Source).toBe("LinkedIn | Indeed");
+    expect(rowPage.Source).toBe("Reddit");
   });
 
   // ... more test cases
