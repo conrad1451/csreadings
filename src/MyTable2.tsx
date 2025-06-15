@@ -547,16 +547,16 @@ const CustomTable = (props: { thePages: Page[] }) => {
               second: "2-digit",
             })
           : curDate
-          ? // Attempt to parse the string into a Date object
-            new Date(curDate).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long", // Use 'long' for the full month name
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            })
-          : "-"}
+            ? // Attempt to parse the string into a Date object
+              new Date(curDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long", // Use 'long' for the full month name
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })
+            : "-"}
       </>
     );
   }
@@ -987,4 +987,5 @@ const CustomTable = (props: { thePages: Page[] }) => {
   );
 };
 
+export { createCustomTableData, MultiSelectFilterSection };
 export default CustomTable;
