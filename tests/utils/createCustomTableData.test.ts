@@ -159,7 +159,7 @@ const mockPages: Page[] = [
 ];
 
 describe("createCustomTableData", () => {
-  it("should correctly join Source array into a string", () => {
+  it("should correctly pick the last tag from a page with multiple tags", () => {
     const targetPage = mockPages[1];
 
     const rowPage: RowPage = createCustomTableData(
@@ -179,7 +179,7 @@ describe("createCustomTableData", () => {
       targetPage.PageURL,
       targetPage.pageContent
     );
-    expect(rowPage.Source).toBe("Reddit");
+    expect(rowPage.Tags[0]).toBe("React");
   });
 
   // ... more test cases
