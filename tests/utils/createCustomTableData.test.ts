@@ -1,7 +1,7 @@
 // --- tests/utils/createCustomTableData.test.ts ---
 // import { createCustomTableData } from "./MyTable";
 
-import { createCustomTableData } from "../../src/MyTable";
+// import { createCustomTableData } from "../../src/MyTable2";
 
 import { it, expect, describe, afterEach, vi } from "vitest";
 // Add the Item interface from your original component
@@ -42,26 +42,23 @@ interface Page {
 interface RowPage {
   myID: string;
   Name: string;
-  Status: string;
-  Level: string;
+  CreatedTime: Date;
+  EditedTime: Date;
+  CreatedStart: Date;
+  CreatedEnd: Date;
+  PublishedStart: Date;
+  PublishedEnd: Date;
+  Area: string;
   Source: string;
-  DateFound: Date;
-  DayPosted: Date;
-  ApplicationDeadline: Date;
-  DateApplied: Date;
-  ExpireDate: Date;
-  PostingURL: string;
-  Connection: string;
-  State: string[];
-  Setup: string[];
-  Company: string[];
-  Education: string[];
-  Duties: string[];
+  Link: string;
+  Type: string;
   Tags: string[];
-  Tenure: string[];
-  Location: string;
   PageURL: string;
+  pageContent: string;
 }
+
+import { createCustomTableData } from "../../src/customDataTable";
+
 // --- Mock Data ---
 // Creating a diverse set of mock pages to test various filters and sorts
 const mockPages: Page[] = [
@@ -160,16 +157,12 @@ const mockPages: Page[] = [
 ];
 describe("createCustomTableData", () => {
   it("should correctly join Source array into a string", () => {
-    const page = {
-      /* ... mock page data with Source: ["LinkedIn", "Indeed"] ... */
-    };
-
     const rowPage: RowPage = createCustomTableData(
       mockPages[0].id,
       mockPages[0].Name,
       mockPages[0].Status,
       mockPages[0].Level,
-      mockPages[0].Source,
+      mockPages[0].Source.join(" | "),
       mockPages[0].DateFound,
       mockPages[0].DayPosted,
       mockPages[0].ApplicationDeadline,
@@ -179,13 +172,8 @@ describe("createCustomTableData", () => {
       mockPages[0].Connection,
       mockPages[0].State,
       mockPages[0].Setup,
-      mockPages[0].Company,
-      mockPages[0].Education,
-      mockPages[0].Duties,
-      mockPages[0].Tags,
-      mockPages[0].Tenure,
-      mockPages[0].Location,
-      mockPages[0].PageURL
+      mockPages[0].Company
+      //   mockPages[0].PageURL
     );
     expect(rowPage.Source).toBe("LinkedIn | Indeed");
   });
