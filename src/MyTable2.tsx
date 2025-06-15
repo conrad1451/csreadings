@@ -987,5 +987,9 @@ const CustomTable = (props: { thePages: Page[] }) => {
   );
 };
 
-export { createCustomTableData, MultiSelectFilterSection };
+// export { createCustomTableData, MultiSelectFilterSection };
+// CHQ: got warning when tried to implement above
+// Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.eslint(react-refresh/only-export-components)
+
+export { MultiSelectFilterSection };
 export default CustomTable;
