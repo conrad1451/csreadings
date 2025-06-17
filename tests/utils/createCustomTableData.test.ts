@@ -1,22 +1,6 @@
 // --- tests/utils/createCustomTableData.test.ts ---
-// import { createCustomTableData } from "./MyTable";
-
-// import { createCustomTableData } from "../../src/MyTable2";
-
 import { it, expect, describe } from "vitest";
 
-// import { it, expect, describe, afterEach, vi } from "vitest";
-// // Add the Item interface from your original component
-// interface Item {
-//   value: string;
-// }
-
-// // Define the interface for the props that BasicDownshift expects
-// interface BasicDownshiftProps {
-//   items: Item[];
-//   labelText: string;
-//   handlethechange: (selection: Item | null) => void;
-// }
 interface Page {
   id: string;
   Name: string;
