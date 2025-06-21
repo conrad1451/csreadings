@@ -1,4 +1,6 @@
 // --- tests/utils/createCustomTableData.test.ts ---
+import { createCustomTableData } from "../../src/utils/dataTransforms";
+
 import { it, expect, describe } from "vitest";
 
 interface Page {
@@ -36,7 +38,6 @@ interface RowPage {
   PageURL: string;
   pageContent: string;
 }
-import { createCustomTableData } from "../../src/customDataTable";
 
 // --- Mock Data ---
 // Creating a diverse set of mock pages to test various filters and sorts

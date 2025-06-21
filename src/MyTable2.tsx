@@ -26,6 +26,17 @@ import { SelectChangeEvent } from "@mui/material/Select";
 
 import BasicDownshift from "./BasicDropdownList";
 
+// --- Import Custom Hooks ---
+import { useTableFilters } from "./hooks/useTableFilters";
+import { useTableSorting } from "./hooks/useTableSorting"; // Path to your useTableSorting.ts
+import { useColumnVisibility } from "./hooks/useColumnVisibility"; // Path to your useColumnVisibility.ts
+
+// Import the data transformation functions from the utilities file
+import {
+  mapPagesToCustomTableData,
+  producePropList,
+} from "./utils/dataTransforms"; // Adjust the path as per your project structure
+
 interface Page {
   id: string;
   Name: string;
@@ -102,27 +113,27 @@ function createCustomTableData(
   };
 }
 
-function mapPagesToCustomTableData(pages: Page[]) {
-  return pages.map((page) =>
-    createCustomTableData(
-      page.id,
-      page.Name,
-      page.Area,
-      page.Source,
-      page.Link,
-      page.Type,
-      page.Tags,
-      page.PageURL,
-      page.pageContent,
-      page.CreatedTime,
-      page.EditedTime,
-      page.CreatedStart,
-      page.CreatedEnd,
-      page.PublishedStart,
-      page.PublishedEnd
-    )
-  );
-}
+// function mapPagesToCustomTableData(pages: Page[]) {
+//   return pages.map((page) =>
+//     createCustomTableData(
+//       page.id,
+//       page.Name,
+//       page.Area,
+//       page.Source,
+//       page.Link,
+//       page.Type,
+//       page.Tags,
+//       page.PageURL,
+//       page.pageContent,
+//       page.CreatedTime,
+//       page.EditedTime,
+//       page.CreatedStart,
+//       page.CreatedEnd,
+//       page.PublishedStart,
+//       page.PublishedEnd
+//     )
+//   );
+// }
 
 // const ElementChoice = (props: { textLine: string }) => {
 //   const text = props.textLine;
@@ -144,44 +155,44 @@ function mapPagesToCustomTableData(pages: Page[]) {
 //   }
 // };
 
-function producePropList(myTableView: RowPage[], selection: "Tags") {
-  const propNames: Array<keyof RowPage> = ["Tags"];
-  if (propNames.includes(selection)) {
-    const singleListOfThePropRaw = myTableView.reduce<string[]>(
-      (accumulator, row) => {
-        if (row[selection] && Array.isArray(row[selection])) {
-          return [...accumulator, ...row[selection]];
-        }
-        return accumulator;
-      },
-      []
-    );
+// function producePropList(myTableView: RowPage[], selection: "Tags") {
+//   const propNames: Array<keyof RowPage> = ["Tags"];
+//   if (propNames.includes(selection)) {
+//     const singleListOfThePropRaw = myTableView.reduce<string[]>(
+//       (accumulator, row) => {
+//         if (row[selection] && Array.isArray(row[selection])) {
+//           return [...accumulator, ...row[selection]];
+//         }
+//         return accumulator;
+//       },
+//       []
+//     );
 
-    const singleListOfTheProp = [...new Set(singleListOfThePropRaw)];
+//     const singleListOfTheProp = [...new Set(singleListOfThePropRaw)];
 
-    const propList: Item[] = singleListOfTheProp.map((theProp) => ({
-      value: theProp,
-    }));
+//     const propList: Item[] = singleListOfTheProp.map((theProp) => ({
+//       value: theProp,
+//     }));
 
-    return propList;
-  } else {
-    // CHQ: Gemini AI created list to store all tags
-    const allCompanies = myTableView.reduce<string[]>((accumulator, row) => {
-      if (row.Tags && Array.isArray(row.Tags)) {
-        return [...accumulator, ...row.Tags];
-      }
-      return accumulator;
-    }, []);
+//     return propList;
+//   } else {
+//     // CHQ: Gemini AI created list to store all tags
+//     const allCompanies = myTableView.reduce<string[]>((accumulator, row) => {
+//       if (row.Tags && Array.isArray(row.Tags)) {
+//         return [...accumulator, ...row.Tags];
+//       }
+//       return accumulator;
+//     }, []);
 
-    const uniqueTags = [...new Set(allCompanies)];
+//     const uniqueTags = [...new Set(allCompanies)];
 
-    const tagList: Item[] = uniqueTags.map((tag) => ({
-      value: tag,
-    }));
+//     const tagList: Item[] = uniqueTags.map((tag) => ({
+//       value: tag,
+//     }));
 
-    return tagList;
-  }
-}
+//     return tagList;
+//   }
+// }
 
 const PageNameFilterSection = (props: {
   toggleLabel: string;
@@ -397,593 +408,209 @@ function filterDataByMultiSelect(
   }
 }
 
-const CustomTable = (props: { thePages: Page[] }) => {
-  const customTableData = mapPagesToCustomTableData(props.thePages);
-  // const [tableData, setTableData] = useState(customTableData.filter((row) => row && row.Name && row.Name.trim() !== ''));
-  // const [tableView, setTableView] = useState(tableData);
-  //   const [filterEnabled, setFilterEnabled] = useState(false);
-  //   const [filterText, setFilterText] = useState("");
+const FilterControlsSection = (props: {
+  filterProps: ReturnType<typeof useTableFilters>["filterProps"];
+  filterHandlers: ReturnType<typeof useTableFilters>["filterHandlers"];
+  derivedLists: ReturnType<typeof useTableFilters>["derivedLists"];
+  tagList: Item[];
+}) => {
+  return (
+    <Box
+      sx={{
+        mb: 4,
+        border: "1px solid #ccc",
+        borderRadius: 2,
+        p: 2,
+        bgcolor: "#f9f9f9",
+      }}
+    >
+      <Typography variant="h5" gutterBottom>
+        Table Filters
+      </Typography>
 
-  const [defaultListOrderNames, setDefaultListOrderNames] = useState<string[]>(
-    []
+      {/* Page Name Filter */}
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 2 }}>
+        <Typography>Filter by Name:</Typography>
+        <Switch
+          checked={props.filterProps.isPageFilterEnabled}
+          onChange={props.filterHandlers.togglePageFilter}
+        />
+        {props.filterProps.isPageFilterEnabled && (
+          <TextField
+            label="Filter Text"
+            value={props.filterProps.pageFilterText}
+            onChange={(e) =>
+              props.filterHandlers.setPageFilterText(e.target.value)
+            }
+            size="small"
+            sx={{ flexGrow: 1 }}
+          />
+        )}
+        <Button
+          onClick={props.filterHandlers.resetPageFilters}
+          disabled={
+            !props.filterProps.isPageFilterEnabled &&
+            props.filterProps.pageFilterText === ""
+          }
+        >
+          Reset
+        </Button>
+      </Box>
+
+      {/* Tag Count Filter */}
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 2 }}>
+        <FormControl sx={{ minWidth: 150 }} size="small">
+          <InputLabel id="tag-count-filter-label">Tag Count</InputLabel>
+          <Select
+            labelId="tag-count-filter-label"
+            id="tag-count-filter"
+            value={props.filterProps.tagCountFilter}
+            label="Tag Count"
+            onChange={props.filterHandlers.handleTagCountChange}
+          >
+            <MenuItem value="">All</MenuItem>
+            {props.derivedLists.tagCountOptions.map(
+              (count: string | number) =>
+                count !== "" && (
+                  <MenuItem key={count} value={count}>
+                    {count}
+                  </MenuItem>
+                )
+            )}
+          </Select>
+        </FormControl>
+        <Button
+          onClick={props.filterHandlers.resetTagCountFilters}
+          disabled={props.filterProps.tagCountFilter === ""}
+        >
+          Reset
+        </Button>
+      </Box>
+
+      {/* Tags Filter (Multi-Select) */}
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 2 }}>
+        <Typography>Filter by Tags:</Typography>
+        <Switch
+          checked={props.filterProps.isTagFilterEnabled}
+          onChange={props.filterHandlers.toggleTagFilter}
+        />
+        {props.filterProps.isTagFilterEnabled && (
+          <BasicDownshift
+            items={props.tagList}
+            labelText="Select Tags"
+            handlethechange={props.filterHandlers.handleTagNameChange}
+          />
+        )}
+        {props.filterProps.tagNameList.length > 0 && (
+          <Typography variant="caption" sx={{ ml: 1 }}>
+            Selected: {props.filterProps.tagNameList.join(", ")}
+          </Typography>
+        )}
+        <Button
+          onClick={props.filterHandlers.resetTagFilters}
+          disabled={
+            !props.filterProps.isTagFilterEnabled &&
+            props.filterProps.tagNameList.length === 0
+          }
+        >
+          Reset
+        </Button>
+      </Box>
+    </Box>
   );
-  const [ascendingListOrderNames, setAscendingListOrderNames] = useState<
-    string[]
-  >([]);
-  const [descendingListOrderNames, setDescendingListOrderNames] = useState<
-    string[]
-  >([]);
+};
 
-  const [defaultListOrderCreatedTime, setDefaultListOrderCreatedTime] =
-    useState<string[]>([]);
-  const [ascendingListOrderCreatedTime, setAscendingListOrderCreatedTime] =
-    useState<string[]>([]);
-  const [descendingListOrderCreatedTime, setDescendingListOrderCreatedTime] =
-    useState<string[]>([]);
+const CustomTable = (props: { thePages: Page[] }) => {
+  // 1. Data Transformation: Convert Page[] to RowPage[]
+  const rawTableData: RowPage[] = useMemo(
+    () => mapPagesToCustomTableData(props.thePages),
+    [props.thePages]
+  );
 
-  const [defaultListOrderEditedTime, setDefaultListOrderEditedTime] = useState<
-    string[]
-  >([]);
-
-  const [ascendingListOrderEditedTime, setAscendingListOrderEditedTime] =
-    useState<string[]>([]);
-  const [descendingListOrderEditedTime, setDescendingListOrderEditedTime] =
-    useState<string[]>([]);
-  const tableData = customTableData.filter(
+  // Filter out rows with empty names (as per your original logic)
+  const initialTableDataForHooks = rawTableData.filter(
     (row) => row && row.Name && row.Name.trim() !== ""
   );
-  const tableView = tableData;
-  // const [tableView, setTableView] = useState(tableData);
 
-  // CHQ: Gemini AI generated part - for filtering via tag count
-  const [tagCountFilter, setTagCountFilter] = useState<number | "">("");
-  const uniqueTagCounts = [
-    ...new Set(tableData.map((row) => row.Tags.length)),
-  ].sort((a, b) => a - b);
-  const tagCountOptions = ["", ...uniqueTagCounts];
+  // 2. Column Visibility Hook
+  const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
+  const {
+    visibleColumns,
+    handleToggleColumn,
+    setPresetVisibility,
+    resetVisibility,
+    presets,
+  } = useColumnVisibility("default"); // Set initial preset
 
-  const [sortDirectionName, setSortDirectionName] = useState<
-    "asc" | "desc" | null
-  >(null);
+  // 3. Filtering Hook
+  const { filteredData, filterProps, filterHandlers, derivedLists } =
+    useTableFilters(initialTableDataForHooks);
 
-  const [sortDirectionCreatedTime, setSortDirectionCreatedTime] = useState<
-    "asc" | "desc" | null
-  >(null);
+  // 4. Sorting Hook
+  const { sortedData, sortProps, sortHandlers } = useTableSorting(filteredData);
 
-  const [sortDirectionEditedTime, setSortDirectionEditedTime] = useState<
-    "asc" | "desc" | null
-  >(null);
-
-  const [tagNameList, setTagNameList] = useState<Array<string>>([""]);
-
-  const resetTagFilters = () => {
-    setTagNameList([]);
-  };
-
-  // Update global default lists on initial load and when the data changes
-  useEffect(() => {
-    setDefaultListOrderNames(tableData.map((item) => item.Name));
-    setDefaultListOrderCreatedTime(
-      tableData.map((item) =>
-        item.CreatedTime instanceof Date ? item.CreatedTime.toISOString() : "-"
-      )
-    );
-    setDefaultListOrderEditedTime(
-      tableData.map((item) =>
-        item.EditedTime instanceof Date ? item.EditedTime.toISOString() : "-"
-      )
-    );
-  }, [tableData]);
-
-  const nameSorter = (a: RowPage, b: RowPage) => {
-    const nameA = a.Name.toLowerCase();
-    const nameB = b.Name.toLowerCase();
-    if (nameA < nameB) {
-      return sortDirectionName === "asc" ? -1 : 1;
-    }
-    if (nameA > nameB) {
-      return sortDirectionName === "asc" ? 1 : -1;
-    }
-    return 0;
-  };
-
-  const createdTimeSorter = (a: RowPage, b: RowPage) => {
-    const dateA = a.CreatedTime ? new Date(a.CreatedTime).getTime() : -Infinity;
-    const dateB = b.CreatedTime ? new Date(b.CreatedTime).getTime() : -Infinity;
-    if (dateA < dateB) {
-      return sortDirectionCreatedTime === "asc" ? -1 : 1;
-    }
-    if (dateA > dateB) {
-      return sortDirectionCreatedTime === "asc" ? 1 : -1;
-    }
-    return 0;
-  };
-
-  const editedTimeSorter = (a: RowPage, b: RowPage) => {
-    const dateA = a.EditedTime ? new Date(a.EditedTime).getTime() : -Infinity;
-    const dateB = b.EditedTime ? new Date(b.EditedTime).getTime() : -Infinity;
-    if (dateA < dateB) {
-      return sortDirectionEditedTime === "asc" ? -1 : 1;
-    }
-    if (dateA > dateB) {
-      return sortDirectionEditedTime === "asc" ? 1 : -1;
-    }
-    return 0;
-  };
-
-  const resetNameSort = () => {
-    setSortDirectionName(null);
-    setAscendingListOrderNames([]);
-    setDescendingListOrderNames([]);
-  };
-
-  const resetCreatedTimeSort = () => {
-    setSortDirectionCreatedTime(null);
-    setAscendingListOrderCreatedTime([]);
-    setDescendingListOrderCreatedTime([]);
-  };
-  const resetEditedTimeSort = () => {
-    setSortDirectionEditedTime(null);
-    setAscendingListOrderEditedTime([]);
-    setDescendingListOrderEditedTime([]);
-  };
-
-  const [pageFilterEnabled, setPageFilterEnabled] = useState(false);
-  const [pageFilterText, setPageFilterText] = useState("");
-
-  const [tagfilterEnabled, setTagfilterEnabled] = useState(false);
-
-  function displayDate(curDate: Date) {
-    return (
-      <>
-        {/** CHQ: generated by Gemini AI */}
-        {curDate instanceof Date
-          ? curDate.toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long", // Use 'long' for the full month name
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            })
-          : curDate
-            ? // Attempt to parse the string into a Date object
-              new Date(curDate).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long", // Use 'long' for the full month name
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-              })
-            : "-"}
-      </>
-    );
-  }
-
-  function displayListInBulletPoints(arr: string[]) {
-    return (
-      <ul
-        style={{
-          marginLeft: "0px",
-          paddingLeft: "2px",
+  // Derive lists for dropdowns based on the currently filtered data
+  // These should be passed to FilterControlsSection
+  const tagList = useMemo(
+    () => producePropList(sortedData, "Tags"),
+    [sortedData]
+  );
+  return (
+    <Box sx={{ p: 2 }}>
+      {/* Table Controls Section */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          gap: 2,
+          mb: 2,
+          alignItems: "flex-start",
         }}
       >
-        {arr.map((point, pointIndex) => (
-          <li key={pointIndex}>{point}</li>
-        ))}
-      </ul>
-    );
-  }
+        <Button
+          variant="contained"
+          onClick={() => setIsColumnModalOpen(true)}
+          sx={{ mb: { xs: 2, md: 0 } }}
+        >
+          Customize Columns
+        </Button>
 
-  function displayURL(theRowURL: string) {
-    return typeof theRowURL === "string" ? (
-      <a href={theRowURL} target="_blank" rel="noopener noreferrer">
-        {theRowURL}
-      </a>
-    ) : (
-      "-" // Or some other fallback, like '-' or JSON.stringify(row.PostingURL) for debugging
-    );
-  }
-
-  const handlePageFilterToggle = () => {
-    setPageFilterEnabled(!pageFilterEnabled);
-    setPageFilterText(""); // Clear filter text when toggling off
-  };
-
-  // CHQ: added by Gemini AI to enable text field which handles filtering
-  //   const handleToggleFilter = () => {
-  //     setFilterEnabled(!filterEnabled);
-  //     setFilterText(""); // Clear filter text when toggling off
-  //   };
-
-  const handleTagFilterToggle = () => {
-    setTagfilterEnabled(!tagfilterEnabled);
-    // setTagFilterText(""); // Clear filter text when toggling off
-    // tableView will be updated in the useEffect hook
-  };
-
-  const handleTagCountChange = (event: SelectChangeEvent<number | "">) => {
-    setTagCountFilter(event.target.value as number | "");
-  };
-
-  const handleNameSort = (direction: "asc" | "desc") => {
-    setSortDirectionName(direction);
-  };
-
-  const handleCreatedTimeSort = (direction: "asc" | "desc") => {
-    setSortDirectionCreatedTime(direction);
-  };
-
-  const handleEditedTimeSort = (direction: "asc" | "desc") => {
-    setSortDirectionEditedTime(direction);
-  };
-
-  const filteredTableData = useMemo(() => {
-    let currentFilteredData = tableData.filter((row: RowPage) => {
-      const nameMatch =
-        !pageFilterEnabled ||
-        row.Name.toLowerCase().includes(pageFilterText.toLowerCase());
-      const tagCountMatch =
-        tagCountFilter === "" || row.Tags.length === tagCountFilter;
-      return nameMatch && tagCountMatch;
-    });
-
-    currentFilteredData = filterDataByMultiSelect(
-      tagfilterEnabled,
-      tagNameList,
-      currentFilteredData,
-      "Tags"
-    );
-
-    return currentFilteredData;
-  }, [
-    tableData,
-    pageFilterEnabled,
-    pageFilterText,
-    tagCountFilter,
-    tagfilterEnabled,
-    tagNameList,
-  ]);
-
-  const sortedTableData = useMemo(() => {
-    let sortedData = [...filteredTableData];
-
-    if (sortDirectionName) {
-      sortedData.sort(nameSorter);
-    }
-    // else if (sortDirectionDateFound) {
-    //   sortedData.sort(dateFoundSorter);
-    // } else if (sortDirectionDayPosted) {
-    //   sortedData.sort(dayPostedSorter);
-    // }
-
-    return sortedData;
-  }, [
-    filteredTableData,
-    sortDirectionName,
-    // sortDirectionDateFound,
-    // sortDirectionDayPosted,
-  ]);
-
-  // CHQ: defaultSort boolean checks added by GeminiAI
-  const isNameDefaultSort =
-    sortDirectionName === null ||
-    (sortDirectionName === "asc" &&
-      JSON.stringify(ascendingListOrderNames) ===
-        JSON.stringify(defaultListOrderNames)) ||
-    (sortDirectionName === "desc" &&
-      JSON.stringify(descendingListOrderNames) ===
-        JSON.stringify(defaultListOrderNames));
-
-  const isCreatedTimeDefaultSort =
-    sortDirectionCreatedTime === null ||
-    (sortDirectionCreatedTime === "asc" &&
-      JSON.stringify(ascendingListOrderCreatedTime) ===
-        JSON.stringify(defaultListOrderCreatedTime)) ||
-    (sortDirectionCreatedTime === "desc" &&
-      JSON.stringify(descendingListOrderCreatedTime) ===
-        JSON.stringify(defaultListOrderCreatedTime));
-
-  const isEditedTimeDefaultSort =
-    sortDirectionEditedTime === null ||
-    (sortDirectionEditedTime === "asc" &&
-      JSON.stringify(ascendingListOrderEditedTime) ===
-        JSON.stringify(defaultListOrderEditedTime)) ||
-    (sortDirectionEditedTime === "desc" &&
-      JSON.stringify(descendingListOrderEditedTime) ===
-        JSON.stringify(defaultListOrderEditedTime));
-
-  const tagList = producePropList(sortedTableData, "Tags");
-  //   const [choiceIndex, setChoiceIndex] = useState<number>(0);
-
-  //   useEffect(() => {
-  //     setVisibleColumns(
-  //       visibilitySettings.get(visibilitySettingChoices[choiceIndex]) ||
-  //         defaultColumnVisibility
-  //     );
-  //   }, [choiceIndex]);
-
-  const handleChangeTag = (selection: Item | null) => {
-    alert(selection ? `You selected ${selection.value}` : "Selection Cleared");
-
-    const newVal = selection ? selection.value : "";
-
-    setTagNameList((prevList) => {
-      if (prevList.length === 1) {
-        if (prevList[0] === "") {
-          return [newVal];
-        }
-      }
-
-      return prevList.concat(newVal);
-    });
-  };
-
-  return (
-    <>
-      <MultiSelectFilterSection
-        sectionText={"Filter tags:"}
-        labelText={"Enter a tag name: "}
-        theList={tagList}
-        otherList={tagNameList}
-        handleTheChange={handleChangeTag}
-        filterEnabled={tagfilterEnabled}
-        handleToggleFilter={handleTagFilterToggle}
-        handleReset={resetTagFilters}
-      />
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <PageNameFilterSection
-          toggleLabel={"Filter Page Content:"}
-          isFilteringPages={pageFilterEnabled}
-          theFilterText={pageFilterText}
-          handleTheToggleFilter={handlePageFilterToggle}
-          setTheFilterText={setPageFilterText}
-        />
-        <TagCountFilterSection
-          theTagCount={tagCountFilter}
-          theTagCountOptions={tagCountOptions}
-          handleTheTagCountChange={handleTagCountChange}
+        {/* Filter Controls */}
+        <FilterControlsSection
+          filterProps={filterProps}
+          filterHandlers={filterHandlers}
+          derivedLists={derivedLists}
+          tagList={tagList}
         />
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table
-          sx={{ minWidth: 650, tableLayout: "fixed" }}
-          aria-label="simple table"
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell align="left" width={"2%"}>
-                #
-              </TableCell>
-              <TableCell
-                align="left"
-                style={{
-                  width: "7.5%",
-                  overflowWrap: "break-word",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  Name
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      ml: 1,
-                    }}
-                  >
-                    <AscendingSortButton
-                      theFontSize="8px"
-                      theMinWidth="auto"
-                      thePadding="2px"
-                      theMargin="0px"
-                      theVisibility={true}
-                      sortFunction={handleNameSort}
-                    />
-                    <DescendingSortButton
-                      theFontSize="8px"
-                      theMinWidth="auto"
-                      thePadding="2px"
-                      theMargin="0px"
-                      theVisibility={true}
-                      sortFunction={handleNameSort}
-                    />
-                  </Box>
-                  {/* CHQ: Tooltip popup added by GeminiAI */}
-                  <Tooltip
-                    title={"bro"}
-                    // title={isNameDefaultSort ? "Sort is the default state" : ""}
-                    placement="left"
-                    arrow
-                    open={
-                      isNameDefaultSort &&
-                      (sortDirectionName === "asc" ||
-                        sortDirectionName === "desc")
-                    }
-                  >
-                    <ResetButton
-                      theFontSize="8px"
-                      theMinWidth="auto"
-                      thePadding="0px"
-                      theMargin="0px"
-                      theVisibility={!isNameDefaultSort}
-                      resetFunction={resetNameSort}
-                    />
-                  </Tooltip>
-                </Box>
-              </TableCell>
-              <TableCell align="left" width={"4%"}>
-                Source
-              </TableCell>
-              <TableCell align="left" width={"4%"}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  Created Time
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      ml: 1,
-                    }}
-                  >
-                    <AscendingSortButton
-                      theFontSize="8px"
-                      theMinWidth="auto"
-                      thePadding="2px"
-                      theMargin="0px"
-                      theVisibility={true}
-                      sortFunction={handleCreatedTimeSort}
-                    />
-                    <DescendingSortButton
-                      theFontSize="8px"
-                      theMinWidth="auto"
-                      thePadding="2px"
-                      theMargin="0px"
-                      theVisibility={true}
-                      sortFunction={handleCreatedTimeSort}
-                    />
-                  </Box>
-                  <ResetButton
-                    theFontSize="8px"
-                    theMinWidth="auto"
-                    thePadding="0px"
-                    theMargin="0px"
-                    theVisibility={!isCreatedTimeDefaultSort}
-                    resetFunction={resetCreatedTimeSort}
-                  />
-                </Box>
-              </TableCell>
-              <TableCell align="left" width={"4%"}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  Edited Time
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      ml: 1,
-                    }}
-                  >
-                    <AscendingSortButton
-                      theFontSize="8px"
-                      theMinWidth="auto"
-                      thePadding="2px"
-                      theMargin="0px"
-                      theVisibility={true}
-                      sortFunction={handleEditedTimeSort}
-                    />
-                    <DescendingSortButton
-                      theFontSize="8px"
-                      theMinWidth="auto"
-                      thePadding="2px"
-                      theMargin="0px"
-                      theVisibility={true}
-                      sortFunction={handleEditedTimeSort}
-                    />
-                  </Box>
-                  <ResetButton
-                    theFontSize="8px"
-                    theMinWidth="auto"
-                    thePadding="0px"
-                    theMargin="0px"
-                    theVisibility={!isEditedTimeDefaultSort}
-                    resetFunction={resetEditedTimeSort}
-                  />
-                </Box>
-              </TableCell>
-              <TableCell
-                className="link-column"
-                align="left"
-                style={{
-                  width: "5%",
-                  overflowWrap: "break-word",
-                }}
-              >
-                Link
-              </TableCell>
-              <TableCell align="left" width={"4%"}>
-                Type
-              </TableCell>
+      {/* Column Visibility Modal */}
+      <ColumnVisibilityControlModal
+        open={isColumnModalOpen}
+        onClose={() => setIsColumnModalOpen(false)}
+        visibleColumns={visibleColumns}
+        onToggle={handleToggleColumn}
+        onSelectPreset={setPresetVisibility}
+        onReset={resetVisibility}
+        presets={presets}
+      />
 
-              <TableCell
-                className="tags-column"
-                align="left"
-                style={{
-                  width: "10%",
-                  overflowWrap: "break-word",
-                }}
-              >
-                Tags
-              </TableCell>
-
-              <TableCell
-                className="notion-column"
-                align="left"
-                style={{
-                  width: "5%",
-                  overflowWrap: "break-word",
-                }}
-              >
-                Notion Page URL
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tableView.map((row, index) =>
-              row && row.Name ? (
-                <TableRow
-                  key={row.myID}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {index + 1}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {row.Name}
-                  </TableCell>
-
-                  <TableCell align="left">{row.Source}</TableCell>
-                  <TableCell align="left">
-                    {displayDate(row.CreatedTime)}
-                  </TableCell>
-                  <TableCell align="left">
-                    {displayDate(row.EditedTime)}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    style={{
-                      overflowWrap: "break-word",
-                    }}
-                  >
-                    {displayURL(row.Link)}
-                  </TableCell>
-                  <TableCell align="left">{row.Type}</TableCell>
-                  <TableCell align="left">
-                    {displayListInBulletPoints(row.Tags)}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    style={{
-                      width: "128px",
-                      overflowWrap: "break-word",
-                    }}
-                  >
-                    {displayURL(row.PageURL)}
-                  </TableCell>
-                  {/* <TableCell align="left">
-                                      <Button variant="contained" onClick={() => handleButtonClick(row.myID, index)}>
-                                          Fetch Content
-                                      </Button>
-                                  </TableCell> */}
-                </TableRow>
-              ) : null
-            )}
-          </TableBody>
+      {/* Main Table Display */}
+      <TableContainer component={Paper} sx={{ mt: 2 }}>
+        <Table stickyHeader aria-label="job application table">
+          <TableHeaderCells
+            visibleColumns={visibleColumns}
+            sortProps={sortProps}
+            sortHandlers={sortHandlers}
+          />
+          <TableBodyRows data={sortedData} visibleColumns={visibleColumns} />
         </Table>
       </TableContainer>
-    </>
+
+      {/* Optional: MyDataBreakdown */}
+      {/* If MyDataBreakdown needs filtered/sorted data, pass `sortedData` */}
+      {/* <MyDataBreakdown data={sortedData} /> */}
+    </Box>
   );
 };
 
