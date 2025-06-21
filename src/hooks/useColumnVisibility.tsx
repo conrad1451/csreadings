@@ -3,124 +3,62 @@ import { useState } from "react";
 
 // --- Interfaces (Copied from your original file for completeness) ---
 // Assuming these are defined globally or imported from a shared types file
-interface ColumnVisibility {
+export interface ColumnVisibility {
+  myID: boolean;
   Name: boolean;
-  Status: boolean;
-  Level: boolean;
+  CreatedTime: boolean;
+  EditedTime: boolean;
+  CreatedStart: boolean;
+  CreatedEnd: boolean;
+  PublishedStart: boolean;
+  PublishedEnd: boolean;
+  Area: boolean;
   Source: boolean;
-  DateFound: boolean;
-  DayPosted: boolean;
-  ApplicationDeadline: boolean;
-  DateApplied: boolean;
-  ExpireDate: boolean;
-  PostingURL: boolean;
-  Connection: boolean;
-  State: boolean;
-  Setup: boolean;
-  Company: boolean;
-  Education: boolean;
-  Duties: boolean;
+  Link: boolean;
+  Type: boolean;
   Tags: boolean;
-  Tenure: boolean;
-  Location: boolean;
   PageURL: boolean;
+  pageContent: boolean;
 }
-
 // --- Default and Preset Column Visibility Settings ---
 // These were in your original CustomTable file, now moved here for centralization
 const defaultColumnVisibility: ColumnVisibility = {
+  myID: true,
   Name: true,
-  Status: true,
-  Level: false,
+  CreatedTime: true,
+  EditedTime: true,
+  CreatedStart: true,
+  CreatedEnd: true,
+  PublishedStart: true,
+  PublishedEnd: true,
+  Area: true,
   Source: true,
-  DateFound: true,
-  DayPosted: false,
-  ApplicationDeadline: false,
-  DateApplied: true,
-  ExpireDate: true,
-  PostingURL: true,
-  Connection: false,
-  State: false,
-  Setup: false,
-  Company: false,
-  Education: false,
-  Duties: false,
+  Link: true,
+  Type: true,
   Tags: true,
-  Tenure: false,
-  Location: false,
   PageURL: true,
+  pageContent: true,
 };
 
-const visibilityPresets: Map<string, ColumnVisibility> = new Map();
+export const visibilityPresets: Map<string, ColumnVisibility> = new Map();
 
 visibilityPresets.set("default", defaultColumnVisibility); // Explicitly set the default
 visibilityPresets.set("smartphone", {
+  myID: true,
   Name: true,
-  Status: true,
-  Level: false,
-  Source: false,
-  DateFound: true,
-  DayPosted: false,
-  ApplicationDeadline: false,
-  DateApplied: false,
-  ExpireDate: false,
-  PostingURL: false,
-  Connection: false,
-  State: false,
-  Setup: false,
-  Company: true,
-  Education: false,
-  Duties: true,
+  CreatedTime: true,
+  EditedTime: true,
+  CreatedStart: true,
+  CreatedEnd: true,
+  PublishedStart: true,
+  PublishedEnd: true,
+  Area: true,
+  Source: true,
+  Link: true,
+  Type: true,
   Tags: true,
-  Tenure: false,
-  Location: false,
   PageURL: true,
-});
-
-visibilityPresets.set("companyInfo", {
-  Name: true,
-  Status: false,
-  Level: false,
-  Source: false,
-  DateFound: true,
-  DayPosted: false,
-  ApplicationDeadline: false,
-  DateApplied: false,
-  ExpireDate: false,
-  PostingURL: false,
-  Connection: false,
-  State: true,
-  Setup: true,
-  Company: true,
-  Education: false,
-  Duties: false,
-  Tags: false,
-  Tenure: true,
-  Location: true,
-  PageURL: false,
-});
-
-visibilityPresets.set("workerSetup", {
-  Name: true,
-  Status: false,
-  Level: false,
-  Source: false,
-  DateFound: true,
-  DayPosted: false,
-  ApplicationDeadline: false,
-  DateApplied: false,
-  ExpireDate: false,
-  PostingURL: false,
-  Connection: false,
-  State: true,
-  Setup: true,
-  Company: true,
-  Education: false,
-  Duties: true,
-  Tags: false,
-  Tenure: true,
-  Location: false,
-  PageURL: false,
+  pageContent: true,
 });
 
 // --- useColumnVisibility Custom Hook ---

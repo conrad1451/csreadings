@@ -9,13 +9,13 @@ import {
   TableRow,
   Paper,
   Button,
-  // Modal,
+  Modal,
   Box,
   Typography,
   Switch,
   TextField,
   // FormGroup,
-  // FormControlLabel,
+  FormControlLabel,
   FormControl,
   InputLabel,
   Select,
@@ -29,8 +29,12 @@ import BasicDownshift from "./BasicDropdownList";
 // --- Import Custom Hooks ---
 import { useTableFilters } from "./hooks/useTableFilters";
 import { useTableSorting } from "./hooks/useTableSorting"; // Path to your useTableSorting.ts
-import { useColumnVisibility } from "./hooks/useColumnVisibility"; // Path to your useColumnVisibility.ts
-
+import {
+  useColumnVisibility,
+  ColumnVisibility,
+  visibilityPresets,
+} from "./hooks/useColumnVisibility";
+import { displayDate } from "./utils/dateDisplay";
 // Import the data transformation functions from the utilities file
 import {
   mapPagesToCustomTableData,
@@ -408,6 +412,124 @@ function filterDataByMultiSelect(
   }
 }
 
+const ColumnVisibilityToggles = (props: {
+  visibleColumns: ColumnVisibility;
+  handleToggleColumn: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) => {
+  const allColumnKeys: Array<keyof ColumnVisibility> = [
+    "Name",
+    "Source",
+    "Tags",
+    "PageURL",
+    "CreatedTime",
+    "EditedTime",
+    "CreatedStart",
+    "CreatedEnd",
+    "PublishedStart",
+    "PublishedEnd",
+    "Area",
+    "Source",
+    "Link",
+    "Type",
+    "Tags",
+    "PageURL",
+    "pageContent",
+  ];
+
+  return (
+    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+      {allColumnKeys.map((colName) => (
+        <FormControlLabel
+          key={colName}
+          control={
+            <Switch
+              checked={props.visibleColumns[colName]}
+              onChange={props.handleToggleColumn}
+              name={colName}
+            />
+          }
+          label={colName}
+        />
+      ))}
+    </Box>
+  );
+};
+
+const ColumnVisibilityControlModal = (props: {
+  open: boolean;
+  onClose: () => void;
+  visibleColumns: ColumnVisibility;
+  onToggle: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelectPreset: (preset: keyof typeof visibilityPresets) => void;
+  onReset: () => void;
+  presets: Map<string, ColumnVisibility>;
+}) => {
+  return (
+    <Modal open={props.open} onClose={props.onClose}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: { xs: "90%", sm: "80%", md: 800 }, // Responsive width
+          bgcolor: "background.paper",
+          border: "2px solid #000",
+          boxShadow: 24,
+          p: 4,
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+      >
+        <Typography variant="h6" component="h2" gutterBottom>
+          Customize Column Visibility
+        </Typography>
+
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="subtitle1">Apply Preset:</Typography>
+          <FormControl fullWidth size="small">
+            <Select
+              value="" // No initial selection, user chooses from list
+              label="Presets"
+              onChange={(e) =>
+                props.onSelectPreset(
+                  e.target.value as keyof typeof visibilityPresets
+                )
+              }
+            >
+              <MenuItem value="">
+                <em>None (Select Preset)</em>
+              </MenuItem>
+              {[...props.presets.keys()].map((key) => (
+                <MenuItem key={key} value={key}>
+                  {key.charAt(0).toUpperCase() +
+                    key.slice(1).replace(/([A-Z])/g, " $1")}{" "}
+                  {/* Format camelCase to readable */}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button onClick={props.onReset} variant="outlined" sx={{ mt: 1 }}>
+            Reset to Default
+          </Button>
+        </Box>
+
+        <Typography variant="subtitle1" gutterBottom>
+          Toggle Individual Columns:
+        </Typography>
+        <ColumnVisibilityToggles
+          visibleColumns={props.visibleColumns}
+          handleToggleColumn={props.onToggle}
+        />
+
+        <Button onClick={props.onClose} variant="contained" sx={{ mt: 3 }}>
+          Close
+        </Button>
+      </Box>
+    </Modal>
+  );
+};
+
 const FilterControlsSection = (props: {
   filterProps: ReturnType<typeof useTableFilters>["filterProps"];
   filterHandlers: ReturnType<typeof useTableFilters>["filterHandlers"];
@@ -517,6 +639,205 @@ const FilterControlsSection = (props: {
         </Button>
       </Box>
     </Box>
+  );
+};
+
+function displayListInBulletPoints(arr: string[] | undefined) {
+  if (!arr || arr.length === 0) {
+    return "-";
+  }
+  return (
+    <ul
+      style={{
+        marginLeft: "0px",
+        paddingLeft: "2px",
+        listStyleType: "none", // To remove default bullets if preferred
+      }}
+    >
+      {arr.map((point, pointIndex) => (
+        <li key={pointIndex}>{point}</li>
+      ))}
+    </ul>
+  );
+}
+
+function displayURL(theRowURL: string | undefined) {
+  return typeof theRowURL === "string" && theRowURL.trim() !== "" ? (
+    <Tooltip title={theRowURL}>
+      <a href={theRowURL} target="_blank" rel="noopener noreferrer">
+        Link
+      </a>
+    </Tooltip>
+  ) : (
+    "-"
+  );
+}
+
+const TableHeaderCells = (props: {
+  visibleColumns: ColumnVisibility;
+  sortProps: ReturnType<typeof useTableSorting>["sortProps"];
+  sortHandlers: ReturnType<typeof useTableSorting>["sortHandlers"];
+}) => {
+  const allColumnKeys: Array<keyof ColumnVisibility> = [
+    "Name",
+    "Source",
+    "Tags",
+    "PageURL",
+    "CreatedTime",
+    "EditedTime",
+    "CreatedStart",
+    "CreatedEnd",
+    "PublishedStart",
+    "PublishedEnd",
+    "Area",
+    "Source",
+    "Link",
+    "Type",
+    "Tags",
+    "PageURL",
+    "pageContent",
+  ];
+
+  // Modified: Only include truly sortable columns
+  const sortableColumns: Partial<
+    Record<keyof ColumnVisibility, (direction: "asc" | "desc") => void>
+  > = {
+    Name: props.sortHandlers.handleNameSort,
+    DateFound: props.sortHandlers.handleDateFoundSort,
+    DayPosted: props.sortHandlers.handleDayPostedSort,
+  };
+
+  // Modified: Only include sort directions for truly sortable columns
+  const sortDirectionMap: Partial<
+    Record<keyof ColumnVisibility, "asc" | "desc" | null>
+  > = {
+    Name: props.sortProps.sortDirectionName,
+    DateFound: props.sortProps.sortDirectionDateFound,
+    DayPosted: props.sortProps.sortDirectionDayPosted,
+  };
+
+  // Modified: Only include reset handlers for truly sortable columns
+  const resetSortHandlerMap: Partial<
+    Record<keyof ColumnVisibility, () => void>
+  > = {
+    Name: props.sortHandlers.resetNameSort,
+    DateFound: props.sortHandlers.resetDateFoundSort,
+    DayPosted: props.sortHandlers.resetDayPostedSort,
+  };
+
+  return (
+    <TableHead>
+      <TableRow>
+        {allColumnKeys.map((colName) =>
+          props.visibleColumns[colName] ? (
+            <TableCell key={colName}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography variant="subtitle2" sx={{ mr: 1 }}>
+                  {colName}
+                </Typography>
+                {sortableColumns[colName] && ( // This condition now correctly checks if the column is sortable
+                  <>
+                    <Button
+                      onClick={() => sortableColumns[colName]?.("asc")} // Added optional chaining
+                      title="Sort Ascending"
+                      sx={{
+                        minWidth: "auto",
+                        p: "2px",
+                        visibility:
+                          sortDirectionMap[colName] === "asc"
+                            ? "hidden"
+                            : "visible",
+                      }}
+                    >
+                      ⬆️
+                    </Button>
+                    <Button
+                      onClick={() => sortableColumns[colName]?.("desc")} // Added optional chaining
+                      title="Sort Descending"
+                      sx={{
+                        minWidth: "auto",
+                        p: "2px",
+                        visibility:
+                          sortDirectionMap[colName] === "desc"
+                            ? "hidden"
+                            : "visible",
+                      }}
+                    >
+                      ⬇️
+                    </Button>
+                    {sortDirectionMap[colName] && (
+                      <Button
+                        onClick={resetSortHandlerMap[colName]}
+                        title="Reset Sort"
+                        sx={{ minWidth: "auto", p: "2px" }}
+                      >
+                        🔄
+                      </Button>
+                    )}
+                  </>
+                )}
+              </Box>
+            </TableCell>
+          ) : null
+        )}
+      </TableRow>
+    </TableHead>
+  );
+};
+
+const TableBodyRows = (props: {
+  data: RowPage[];
+  visibleColumns: ColumnVisibility;
+}) => {
+  const allColumnKeys: Array<keyof ColumnVisibility> = [
+    "Name",
+    "Source",
+    "Tags",
+    "PageURL",
+    "CreatedTime",
+    "EditedTime",
+    "CreatedStart",
+    "CreatedEnd",
+    "PublishedStart",
+    "PublishedEnd",
+    "Area",
+    "Source",
+    "Link",
+    "Type",
+    "Tags",
+    "PageURL",
+    "pageContent",
+  ];
+
+  return (
+    <TableBody>
+      {props.data.map((row) => (
+        <TableRow key={row.myID}>
+          {allColumnKeys.map((colName) =>
+            props.visibleColumns[colName] ? (
+              <TableCell key={colName}>
+                {colName === "Name" && row.Name}
+                {colName === "Source" && row.Source}
+                "Tags", "PageURL", "", "", "PublishedStart", "PublishedEnd",
+                "Area", "Source",
+                {colName === "CreatedTime" && displayDate(row.CreatedTime)}
+                {colName === "EditedTime" && displayDate(row.EditedTime)}
+                {/* {colName === "CreatedEnd" && displayDate(row.CreatedEnd)} */}
+                {colName === "PublishedStart" &&
+                  displayDate(row.PublishedStart)}
+                {/* {colName === "PublishedEnd" && displayDate(row.PublishedEnd)} */}
+                {colName === "Area" && row.Area}
+                {colName === "Source" && row.Source}
+                {colName === "Link" && row.Link}
+                {colName === "Type" && row.Type}
+                {colName === "Tags" && displayListInBulletPoints(row.Tags)}
+                {colName === "PageURL" && displayURL(row.PageURL)}
+              </TableCell>
+            ) : null
+          )}
+        </TableRow>
+      ))}
+    </TableBody>
   );
 };
 

@@ -19,7 +19,7 @@ interface Page {
 }
 
 interface RowPage {
-  myID: string; // Corresponds to Page.id
+  myID: string;
   Name: string;
   CreatedTime: Date;
   EditedTime: Date;
