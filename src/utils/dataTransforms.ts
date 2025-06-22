@@ -108,16 +108,6 @@ export function producePropList(
   // selection: "Tags"
 ): Item[] {
   // Helper to determine if the property on RowPage is expected to be an array
-  // const isArrayProp = (prop: keyof RowPage) =>
-  //   [
-  //     "Tags",
-  //     "Company",
-  //     "Tenure",
-  //     "Setup",
-  //     "State",
-  //     "Duties",
-  //     "Education",
-  //   ].includes(prop);
   const isArrayProp = (prop: keyof RowPage) =>
     [
       "Tags",
