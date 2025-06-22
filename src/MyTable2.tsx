@@ -56,7 +56,7 @@ interface Page {
   Type: string;
   Tags: string[];
   PageURL: string;
-  pageContent: string;
+  // pageContent: string;
 }
 
 interface RowPage {
@@ -74,7 +74,7 @@ interface RowPage {
   Type: string;
   Tags: string[];
   PageURL: string;
-  pageContent: string;
+  // pageContent: string;
 }
 
 interface Item {
@@ -95,7 +95,7 @@ const allColumnKeys: Array<keyof ColumnVisibility> = [
   "Type",
   "Tags",
   "PageURL",
-  "pageContent",
+  // "pageContent",
 ];
 
 // function mapPagesToCustomTableData(pages: Page[]) {
@@ -628,7 +628,7 @@ const TableBodyRows = (props: {
                 {/* {colName === "PublishedEnd" && displayDate(row.PublishedEnd)} */}
                 {colName === "Area" && row.Area}
                 {colName === "Source" && row.Source}
-                {colName === "Link" && row.Link}
+                {colName === "Link" && displayURL(row.Link)}
                 {colName === "Type" && row.Type}
                 {colName === "Tags" && displayListInBulletPoints(row.Tags)}
                 {colName === "PageURL" && displayURL(row.PageURL)}
