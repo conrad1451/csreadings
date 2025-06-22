@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 
 import {
   Table,
@@ -22,7 +22,7 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import { SelectChangeEvent } from "@mui/material/Select";
+// import { SelectChangeEvent } from "@mui/material/Select";
 
 import BasicDownshift from "./BasicDropdownList";
 
@@ -80,43 +80,6 @@ interface RowPage {
 interface Item {
   value: string;
 }
-
-function createCustomTableData(
-  myID: string,
-  Name: string,
-  Area: string,
-  Source: string,
-  Link: string,
-  Type: string,
-  Tags: string[],
-  PageURL: string,
-  pageContent: string,
-  CreatedTime: Date,
-  EditedTime: Date,
-  CreatedStart: Date,
-  CreatedEnd: Date,
-  PublishedStart: Date,
-  PublishedEnd: Date
-) {
-  return {
-    myID,
-    Name,
-    Area,
-    Source,
-    Link,
-    Type,
-    Tags,
-    PageURL,
-    pageContent,
-    CreatedTime,
-    EditedTime,
-    CreatedStart,
-    CreatedEnd,
-    PublishedStart,
-    PublishedEnd,
-  };
-}
-
 // function mapPagesToCustomTableData(pages: Page[]) {
 //   return pages.map((page) =>
 //     createCustomTableData(
@@ -197,118 +160,6 @@ function createCustomTableData(
 //     return tagList;
 //   }
 // }
-
-const PageNameFilterSection = (props: {
-  toggleLabel: string;
-  isFilteringPages: boolean;
-  theFilterText: string;
-  handleTheToggleFilter: () => void;
-  setTheFilterText: (event: any) => void;
-}) => {
-  return (
-    <>
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <Typography>{props.toggleLabel}</Typography>
-        <Switch
-          checked={props.isFilteringPages}
-          onChange={props.handleTheToggleFilter}
-        />
-        {props.isFilteringPages && (
-          <>
-            <TextField
-              label="Filter Text"
-              value={props.theFilterText}
-              onChange={(e) => props.setTheFilterText(e.target.value)}
-              sx={{ ml: 2 }}
-            />
-          </>
-        )}
-      </Box>
-    </>
-  );
-};
-
-const TagCountFilterSection = (props: {
-  theTagCount: number | "";
-  theTagCountOptions: (string | number)[];
-  handleTheTagCountChange: (event: SelectChangeEvent<number | "">) => void;
-}) => {
-  return (
-    <>
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <FormControl sx={{ ml: 2, minWidth: 120 }}>
-          <InputLabel id="tag-count-filter-label">Tag Count</InputLabel>
-          <Select
-            labelId="tag-count-filter-label"
-            id="tag-count-filter"
-            value={props.theTagCount}
-            label="Tag Count"
-            onChange={props.handleTheTagCountChange}
-          >
-            {props.theTagCountOptions.map((count: string | number) => (
-              <MenuItem key={count === "" ? "all" : count} value={count}>
-                {count === "" ? "All" : count}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-    </>
-  );
-};
-const AscendingSortButton = (props: {
-  theFontSize: string;
-  theMinWidth: string;
-  thePadding: string;
-  theMargin: string;
-  theVisibility: boolean;
-  sortFunction: (direction: "asc" | "desc") => void;
-}) => {
-  return (
-    <>
-      <Button
-        onClick={() => props.sortFunction("asc")}
-        title="Ascending"
-        style={{
-          fontSize: props.theFontSize,
-          minWidth: props.theMinWidth,
-          padding: props.thePadding,
-          margin: props.theMargin,
-          visibility: props.theVisibility ? "visible" : "hidden",
-        }}
-      >
-        ⬆️
-      </Button>
-    </>
-  );
-};
-
-const DescendingSortButton = (props: {
-  theFontSize: string;
-  theMinWidth: string;
-  thePadding: string;
-  theMargin: string;
-  theVisibility: boolean;
-  sortFunction: (direction: "asc" | "desc") => void;
-}) => {
-  return (
-    <>
-      <Button
-        onClick={() => props.sortFunction("desc")}
-        title="Descending"
-        style={{
-          fontSize: props.theFontSize,
-          minWidth: props.theMinWidth,
-          padding: props.thePadding,
-          margin: props.theMargin,
-          visibility: props.theVisibility ? "visible" : "hidden",
-        }}
-      >
-        ⬇️
-      </Button>
-    </>
-  );
-};
 
 // const ResetButton = React.forwardRef(
 //   (
@@ -394,23 +245,6 @@ const MultiSelectFilterSection = (props: {
     </>
   );
 };
-
-function filterDataByMultiSelect(
-  filterEnabled: boolean,
-  propNameList: string[],
-  curData: RowPage[],
-  selection: "Tags"
-) {
-  if (filterEnabled && propNameList.length > 0 && propNameList[0] !== "") {
-    return curData.filter(
-      (row) =>
-        row[selection] &&
-        propNameList.every((curTag) => row[selection].includes(curTag))
-    );
-  } else {
-    return curData;
-  }
-}
 
 const ColumnVisibilityToggles = (props: {
   visibleColumns: ColumnVisibility;
@@ -703,8 +537,10 @@ const TableHeaderCells = (props: {
     Record<keyof ColumnVisibility, (direction: "asc" | "desc") => void>
   > = {
     Name: props.sortHandlers.handleNameSort,
-    DateFound: props.sortHandlers.handleDateFoundSort,
-    DayPosted: props.sortHandlers.handleDayPostedSort,
+    Source: props.sortHandlers.handleSourceSort,
+    CreatedTime: props.sortHandlers.handleCreatedTimeSort,
+    EditedTime: props.sortHandlers.handleEditedTimeSort,
+    CreatedStart: props.sortHandlers.handleNotedTimeSort,
   };
 
   // Modified: Only include sort directions for truly sortable columns
@@ -712,8 +548,10 @@ const TableHeaderCells = (props: {
     Record<keyof ColumnVisibility, "asc" | "desc" | null>
   > = {
     Name: props.sortProps.sortDirectionName,
-    DateFound: props.sortProps.sortDirectionDateFound,
-    DayPosted: props.sortProps.sortDirectionDayPosted,
+    Source: props.sortProps.sortDirectionSource,
+    CreatedTime: props.sortProps.sortDirectionCreatedTime,
+    EditedTime: props.sortProps.sortDirectionEditedTime,
+    CreatedStart: props.sortProps.sortDirectionCreatedTime,
   };
 
   // Modified: Only include reset handlers for truly sortable columns
@@ -721,8 +559,10 @@ const TableHeaderCells = (props: {
     Record<keyof ColumnVisibility, () => void>
   > = {
     Name: props.sortHandlers.resetNameSort,
-    DateFound: props.sortHandlers.resetDateFoundSort,
-    DayPosted: props.sortHandlers.resetDayPostedSort,
+    Source: props.sortHandlers.resetNotedTimeSort,
+    CreatedTime: props.sortHandlers.resetCreatedTimeSort,
+    EditedTime: props.sortHandlers.resetEditedTimeSort,
+    CreatedStart: props.sortHandlers.resetNotedTimeSort,
   };
 
   return (

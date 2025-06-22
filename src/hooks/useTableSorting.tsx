@@ -99,12 +99,7 @@ function sortByDateComparator(
   a: RowPage,
   b: RowPage,
   direction: "asc" | "desc",
-  dateKey:
-    | "DateFound"
-    | "DayPosted"
-    | "ApplicationDeadline"
-    | "DateApplied"
-    | "ExpireDate"
+  dateKey: "CreatedStart" | "CreatedTime" | "EditedTime" | "Source"
 ): number {
   // Convert dates to milliseconds for comparison, treat invalid/missing dates as -Infinity to push them to end in asc.
   const dateA =
@@ -147,38 +142,59 @@ export const useTableSorting = (filteredData: RowPage[]) => {
   const [sortDirectionName, setSortDirectionName] = useState<
     "asc" | "desc" | null
   >(null);
-  const [sortDirectionDateFound, setSortDirectionDateFound] = useState<
+  const [sortDirectionNotedTime, setsortDirectionNotedTime] = useState<
     "asc" | "desc" | null
   >(null);
-  const [sortDirectionDayPosted, setSortDirectionDayPosted] = useState<
+  const [sortDirectionCreatedTime, setsortDirectionCreatedTime] = useState<
+    "asc" | "desc" | null
+  >(null);
+  const [sortDirectionEditedTime, setsortDirectionEditedTime] = useState<
+    "asc" | "desc" | null
+  >(null);
+  const [sortDirectionSource, setsortDirectionSource] = useState<
     "asc" | "desc" | null
   >(null);
 
   // --- Reset Functions for Sorting ---
   const resetNameSort = () => setSortDirectionName(null);
-  const resetDateFoundSort = () => setSortDirectionDateFound(null);
-  const resetDayPostedSort = () => setSortDirectionDayPosted(null);
+  const resetNotedTimeSort = () => setsortDirectionNotedTime(null);
+  const resetCreatedTimeSort = () => setsortDirectionCreatedTime(null);
+  const resetEditedTimeSort = () => setsortDirectionEditedTime(null);
+  const resetSourceTimeSort = () => setsortDirectionSource(null);
 
   // --- Sort Handlers (to be called by UI) ---
   const handleNameSort = (direction: "asc" | "desc") => {
     setSortDirectionName(direction);
     // Reset other sorts when a new column is sorted
-    setSortDirectionDateFound(null);
-    setSortDirectionDayPosted(null);
+    setsortDirectionNotedTime(null);
+    setsortDirectionCreatedTime(null);
   };
 
-  const handleDateFoundSort = (direction: "asc" | "desc") => {
-    setSortDirectionDateFound(direction);
+  const handleNotedTimeSort = (direction: "asc" | "desc") => {
+    setsortDirectionNotedTime(direction);
     // Reset other sorts
     setSortDirectionName(null);
-    setSortDirectionDayPosted(null);
+    setsortDirectionCreatedTime(null);
   };
 
-  const handleDayPostedSort = (direction: "asc" | "desc") => {
-    setSortDirectionDayPosted(direction);
+  const handleCreatedTimeSort = (direction: "asc" | "desc") => {
+    setsortDirectionCreatedTime(direction);
     // Reset other sorts
     setSortDirectionName(null);
-    setSortDirectionDateFound(null);
+    setsortDirectionNotedTime(null);
+  };
+
+  const handleEditedTimeSort = (direction: "asc" | "desc") => {
+    setSortDirectionName(direction);
+    // Reset other sorts when a new column is sorted
+    setsortDirectionNotedTime(null);
+    setsortDirectionCreatedTime(null);
+  };
+  const handleSourceSort = (direction: "asc" | "desc") => {
+    setSortDirectionName(direction);
+    // Reset other sorts when a new column is sorted
+    setsortDirectionNotedTime(null);
+    setsortDirectionCreatedTime(null);
   };
 
   // --- Memoized Sorted Data ---
@@ -189,13 +205,21 @@ export const useTableSorting = (filteredData: RowPage[]) => {
       sortableData.sort((a, b) =>
         sortByNameComparator(a, b, sortDirectionName)
       );
-    } else if (sortDirectionDateFound) {
+    } else if (sortDirectionNotedTime) {
       sortableData.sort((a, b) =>
-        sortByDateComparator(a, b, sortDirectionDateFound, "DateFound")
+        sortByDateComparator(a, b, sortDirectionNotedTime, "CreatedStart")
       );
-    } else if (sortDirectionDayPosted) {
+    } else if (sortDirectionCreatedTime) {
       sortableData.sort((a, b) =>
-        sortByDateComparator(a, b, sortDirectionDayPosted, "DayPosted")
+        sortByDateComparator(a, b, sortDirectionCreatedTime, "CreatedTime")
+      );
+    } else if (sortDirectionEditedTime) {
+      sortableData.sort((a, b) =>
+        sortByDateComparator(a, b, sortDirectionEditedTime, "EditedTime")
+      );
+    } else if (sortDirectionSource) {
+      sortableData.sort((a, b) =>
+        sortByDateComparator(a, b, sortDirectionSource, "Source")
       );
     }
 
@@ -203,24 +227,32 @@ export const useTableSorting = (filteredData: RowPage[]) => {
   }, [
     filteredData,
     sortDirectionName,
-    sortDirectionDateFound,
-    sortDirectionDayPosted,
+    sortDirectionNotedTime,
+    sortDirectionCreatedTime,
+    sortDirectionEditedTime,
+    sortDirectionSource,
   ]);
 
   return {
     sortedData,
     sortProps: {
       sortDirectionName,
-      sortDirectionDateFound,
-      sortDirectionDayPosted,
+      sortDirectionNotedTime,
+      sortDirectionCreatedTime,
+      sortDirectionEditedTime,
+      sortDirectionSource,
     },
     sortHandlers: {
       handleNameSort,
-      handleDateFoundSort,
-      handleDayPostedSort,
+      handleNotedTimeSort,
+      handleCreatedTimeSort,
+      handleEditedTimeSort,
+      handleSourceSort,
       resetNameSort,
-      resetDateFoundSort,
-      resetDayPostedSort,
+      resetNotedTimeSort,
+      resetCreatedTimeSort,
+      resetEditedTimeSort,
+      resetSourceTimeSort,
     },
   };
 };

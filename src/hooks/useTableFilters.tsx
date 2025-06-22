@@ -82,7 +82,7 @@ function filterBySingleSelect(
   filterEnabled: boolean,
   selectedValue: string,
   curData: RowPage[],
-  selection: "Status" | "Level" // Assuming these are the only single-select string keys
+  selection: "Source"
 ): RowPage[] {
   if (filterEnabled && selectedValue !== "") {
     return curData.filter((row) => row[selection] === selectedValue);
@@ -102,7 +102,7 @@ function filterByMultiSelect(
   filterEnabled: boolean,
   propNameList: string[],
   curData: RowPage[],
-  selection: "Company" | "Tags" | "Tenure" | "Setup"
+  selection: "Tags"
 ): RowPage[] {
   // Ensure the filter is enabled, propNameList has actual values, and the first value isn't an empty string (from initial state)
   if (filterEnabled && propNameList.length > 0 && propNameList[0] !== "") {
@@ -171,17 +171,8 @@ export const useTableFilters = (initialData: RowPage[]) => {
   const [pageFilterEnabled, setPageFilterEnabled] = useState(false);
   const [pageFilterText, setPageFilterText] = useState("");
 
-  const [statusFilterEnabled, setStatusFilterEnabled] = useState(false);
-  const [statusSelected, setStatusSelected] = useState<string>("");
-
-  const [companyFilterEnabled, setCompanyFilterEnabled] = useState(false);
-  const [companyNameList, setCompanyNameList] = useState<string[]>([]); // Using empty array for multi-select
-
-  const [tenureFilterEnabled, setTenureFilterEnabled] = useState(false);
-  const [tenureNameList, setTenureNameList] = useState<string[]>([]);
-
-  const [setupFilterEnabled, setSetupFilterEnabled] = useState(false);
-  const [setupNameList, setSetupNameList] = useState<string[]>([]);
+  const [sourceFilterEnabled, setSourceFilterEnabled] = useState(false);
+  const [sourceSelected, setSourceSelected] = useState<string>("");
 
   const [tagFilterEnabled, setTagFilterEnabled] = useState(false);
   const [tagNameList, setTagNameList] = useState<string[]>([]);
@@ -207,24 +198,8 @@ export const useTableFilters = (initialData: RowPage[]) => {
     setPageFilterText(""); // Clear filter text when toggling off
   };
 
-  const handleStatusFilterToggle = () => {
-    setStatusFilterEnabled((prev) => !prev);
-    // Optionally, reset statusSelected if toggling off
-    // if (statusFilterEnabled) setStatusSelected("");
-  };
-
-  const handleCompanyFilterToggle = () => {
-    setCompanyFilterEnabled((prev) => !prev);
-    // Optionally, reset companyNameList if toggling off
-    // if (companyFilterEnabled) setCompanyNameList([]);
-  };
-
-  const handleTenureFilterToggle = () => {
-    setTenureFilterEnabled((prev) => !prev);
-  };
-
-  const handleSetupFilterToggle = () => {
-    setSetupFilterEnabled((prev) => !prev);
+  const handleSourceFilterToggle = () => {
+    setSourceFilterEnabled((prev) => !prev);
   };
 
   const handleTagFilterToggle = () => {
@@ -235,8 +210,8 @@ export const useTableFilters = (initialData: RowPage[]) => {
     setTagCountFilter(event.target.value as number | "");
   };
 
-  const handleStatusChange = (selection: Item | null) => {
-    setStatusSelected(selection ? selection.value : "");
+  const handleSourceChange = (selection: Item | null) => {
+    setSourceSelected(selection ? selection.value : "");
   };
 
   // Multi-select handlers for BasicDropdownList (assuming single selection on change)
@@ -260,52 +235,14 @@ export const useTableFilters = (initialData: RowPage[]) => {
     }
   };
 
-  const handleCompanyNameChange = (selection: Item | null) => {
-    if (selection && selection.value) {
-      setCompanyNameList((prev) =>
-        prev.includes(selection.value)
-          ? prev.filter((company) => company !== selection.value)
-          : [...prev, selection.value]
-      );
-    } else {
-      setCompanyNameList([]);
-    }
-  };
-
-  const handleTenureNameChange = (selection: Item | null) => {
-    if (selection && selection.value) {
-      setTenureNameList((prev) =>
-        prev.includes(selection.value)
-          ? prev.filter((tenure) => tenure !== selection.value)
-          : [...prev, selection.value]
-      );
-    } else {
-      setTenureNameList([]);
-    }
-  };
-
-  const handleSetupNameChange = (selection: Item | null) => {
-    if (selection && selection.value) {
-      setSetupNameList((prev) =>
-        prev.includes(selection.value)
-          ? prev.filter((setup) => setup !== selection.value)
-          : [...prev, selection.value]
-      );
-    } else {
-      setSetupNameList([]);
-    }
-  };
-
   // --- Reset Functions ---
   const resetPageFilters = () => {
     setPageFilterText("");
     setPageFilterEnabled(false);
   };
   const resetTagCountFilters = () => setTagCountFilter("");
-  const resetStatusFilters = () => setStatusSelected("");
-  const resetCompanyFilters = () => setCompanyNameList([]);
-  const resetTenureFilters = () => setTenureNameList([]);
-  const resetSetupFilters = () => setSetupNameList([]);
+  const resetSourceFilters = () => setSourceSelected("");
+
   const resetTagFilters = () => setTagNameList([]);
 
   // --- Memoized Filtered Data ---
@@ -329,31 +266,13 @@ export const useTableFilters = (initialData: RowPage[]) => {
       currentFilteredData,
       "Tags"
     );
-    currentFilteredData = filterByMultiSelect(
-      companyFilterEnabled,
-      companyNameList,
-      currentFilteredData,
-      "Company"
-    );
-    currentFilteredData = filterByMultiSelect(
-      tenureFilterEnabled,
-      tenureNameList,
-      currentFilteredData,
-      "Tenure"
-    );
-    currentFilteredData = filterByMultiSelect(
-      setupFilterEnabled,
-      setupNameList,
-      currentFilteredData,
-      "Setup"
-    );
 
     // Apply single-select status filter
     currentFilteredData = filterBySingleSelect(
-      statusFilterEnabled,
-      statusSelected,
+      sourceFilterEnabled,
+      sourceSelected,
       currentFilteredData,
-      "Status"
+      "Source"
     );
 
     return currentFilteredData;
@@ -361,17 +280,11 @@ export const useTableFilters = (initialData: RowPage[]) => {
     initialData,
     pageFilterEnabled,
     pageFilterText,
+    sourceFilterEnabled,
+    sourceSelected,
     tagCountFilter,
     tagFilterEnabled,
     tagNameList,
-    companyFilterEnabled,
-    companyNameList,
-    tenureFilterEnabled,
-    tenureNameList,
-    setupFilterEnabled,
-    setupNameList,
-    statusFilterEnabled,
-    statusSelected,
   ]);
 
   return {
@@ -380,14 +293,8 @@ export const useTableFilters = (initialData: RowPage[]) => {
       isPageFilterEnabled: pageFilterEnabled,
       pageFilterText,
       tagCountFilter,
-      isStatusFilterEnabled: statusFilterEnabled,
-      statusSelected,
-      isCompanyFilterEnabled: companyFilterEnabled,
-      companyNameList,
-      isTenureFilterEnabled: tenureFilterEnabled,
-      tenureNameList,
-      isSetupFilterEnabled: setupFilterEnabled,
-      setupNameList,
+      isSourceFilterEnabled: sourceFilterEnabled,
+      sourceSelected,
       isTagFilterEnabled: tagFilterEnabled,
       tagNameList,
     },
@@ -395,22 +302,13 @@ export const useTableFilters = (initialData: RowPage[]) => {
       togglePageFilter: handlePageFilterToggle,
       setPageFilterText,
       handleTagCountChange,
-      toggleStatusFilter: handleStatusFilterToggle,
-      handleStatusChange,
-      toggleCompanyFilter: handleCompanyFilterToggle,
-      handleCompanyNameChange,
-      toggleTenureFilter: handleTenureFilterToggle,
-      handleTenureNameChange,
-      toggleSetupFilter: handleSetupFilterToggle,
-      handleSetupNameChange,
+      toggleSourceFilter: handleSourceFilterToggle,
+      handleSourceChange,
       toggleTagFilter: handleTagFilterToggle,
       handleTagNameChange,
       resetPageFilters,
       resetTagCountFilters,
-      resetStatusFilters,
-      resetCompanyFilters,
-      resetTenureFilters,
-      resetSetupFilters,
+      resetSourceFilters,
       resetTagFilters,
     },
     derivedLists: {
