@@ -98,75 +98,76 @@ const allColumnKeys: Array<keyof ColumnVisibility> = [
   // "pageContent",
 ];
 
-const ResetButton = React.forwardRef<
-  HTMLButtonElement,
-  {
-    theFontSize: string;
-    theMinWidth: string;
-    thePadding: string;
-    theMargin: string;
-    theVisibility: boolean;
-    resetFunction: () => void;
-  }
->((props, ref) => {
-  return (
-    <>
-      <Button
-        onClick={() => props.resetFunction()}
-        title="Reset"
-        style={{
-          fontSize: props.theFontSize,
-          minWidth: props.theMinWidth,
-          padding: props.thePadding,
-          margin: props.theMargin,
-          visibility: props.theVisibility ? "visible" : "hidden",
-        }}
-        ref={ref} // This ref is now typed as HTMLButtonElement
-      >
-        🔄
-      </Button>
-    </>
-  );
-});
-const MultiSelectFilterSection = (props: {
-  sectionText: string;
-  labelText: string;
-  theList: Item[];
-  otherList: string[];
-  handleTheChange: (selection: Item | null) => void;
-  filterEnabled: boolean;
-  handleToggleFilter: () => void;
-  handleReset: () => void;
-}) => {
-  return (
-    <>
-      <div className="top-controls">
-        <div>
-          <Typography>{props.sectionText}</Typography>
-          <BasicDownshift
-            items={props.theList}
-            labelText={props.labelText}
-            handlethechange={props.handleTheChange}
-          />
-        </div>
-        <Switch
-          checked={props.filterEnabled}
-          onChange={props.handleToggleFilter}
-        />
-        <ResetButton
-          theFontSize="18px"
-          theMinWidth="auto"
-          thePadding="2px"
-          theMargin="0px"
-          theVisibility={true}
-          resetFunction={props.handleReset}
-        />
-      </div>
-      {/*CHQ: added by Gemini AI*/}
-      <>{props.otherList.join("||")}</>
-    </>
-  );
-};
+// CHQ: comment out unused code
+// const ResetButton = React.forwardRef<
+//   HTMLButtonElement,
+//   {
+//     theFontSize: string;
+//     theMinWidth: string;
+//     thePadding: string;
+//     theMargin: string;
+//     theVisibility: boolean;
+//     resetFunction: () => void;
+//   }
+// >((props, ref) => {
+//   return (
+//     <>
+//       <Button
+//         onClick={() => props.resetFunction()}
+//         title="Reset"
+//         style={{
+//           fontSize: props.theFontSize,
+//           minWidth: props.theMinWidth,
+//           padding: props.thePadding,
+//           margin: props.theMargin,
+//           visibility: props.theVisibility ? "visible" : "hidden",
+//         }}
+//         ref={ref} // This ref is now typed as HTMLButtonElement
+//       >
+//         🔄
+//       </Button>
+//     </>
+//   );
+// });
+// const MultiSelectFilterSection = (props: {
+//   sectionText: string;
+//   labelText: string;
+//   theList: Item[];
+//   otherList: string[];
+//   handleTheChange: (selection: Item | null) => void;
+//   filterEnabled: boolean;
+//   handleToggleFilter: () => void;
+//   handleReset: () => void;
+// }) => {
+//   return (
+//     <>
+//       <div className="top-controls">
+//         <div>
+//           <Typography>{props.sectionText}</Typography>
+//           <BasicDownshift
+//             items={props.theList}
+//             labelText={props.labelText}
+//             handlethechange={props.handleTheChange}
+//           />
+//         </div>
+//         <Switch
+//           checked={props.filterEnabled}
+//           onChange={props.handleToggleFilter}
+//         />
+//         <ResetButton
+//           theFontSize="18px"
+//           theMinWidth="auto"
+//           thePadding="2px"
+//           theMargin="0px"
+//           theVisibility={true}
+//           resetFunction={props.handleReset}
+//         />
+//       </div>
+//       {/*CHQ: added by Gemini AI*/}
+//       <>{props.otherList.join("||")}</>
+//     </>
+//   );
+// };
 
 const ColumnVisibilityToggles = (props: {
   visibleColumns: ColumnVisibility;
@@ -648,5 +649,5 @@ const CustomTable = (props: { thePages: Page[] }) => {
 // CHQ: got warning when tried to implement above
 // Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.eslint(react-refresh/only-export-components)
 
-export { MultiSelectFilterSection };
+// export { MultiSelectFilterSection };
 export default CustomTable;
