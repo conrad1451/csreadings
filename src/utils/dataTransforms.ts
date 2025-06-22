@@ -19,7 +19,7 @@ interface Page {
   Type: string;
   Tags: string[];
   PageURL: string;
-  pageContent: string;
+  // pageContent: string;
 }
 
 interface RowPage {
@@ -37,7 +37,7 @@ interface RowPage {
   Type: string;
   Tags: string[];
   PageURL: string;
-  pageContent: string;
+  // pageContent: string;
 }
 export function createCustomTableData(
   myID: string, // First as per 'targetPage.id'
@@ -53,8 +53,8 @@ export function createCustomTableData(
   Link: string,
   Type: string,
   Tags: string[],
-  PageURL: string,
-  pageContent: string
+  PageURL: string
+  // pageContent: string
 ): RowPage {
   return {
     myID,
@@ -71,7 +71,7 @@ export function createCustomTableData(
     Type,
     Tags,
     PageURL,
-    pageContent,
+    // pageContent,
   };
 }
 
@@ -95,8 +95,8 @@ export function mapPagesToCustomTableData(pages: Page[]): RowPage[] {
       page.Link,
       page.Type,
       page.Tags,
-      page.PageURL,
-      page.pageContent
+      page.PageURL
+      // page.pageContent
     )
   );
 }
