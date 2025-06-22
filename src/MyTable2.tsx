@@ -80,6 +80,24 @@ interface RowPage {
 interface Item {
   value: string;
 }
+
+const allColumnKeys: Array<keyof ColumnVisibility> = [
+  "Name",
+  "CreatedTime",
+  "EditedTime",
+  "CreatedStart",
+  "CreatedEnd",
+  "PublishedStart",
+  "PublishedEnd",
+  "Area",
+  "Source",
+  "Link",
+  "Type",
+  "Tags",
+  "PageURL",
+  "pageContent",
+];
+
 // function mapPagesToCustomTableData(pages: Page[]) {
 //   return pages.map((page) =>
 //     createCustomTableData(
@@ -249,30 +267,11 @@ const MultiSelectFilterSection = (props: {
 const ColumnVisibilityToggles = (props: {
   visibleColumns: ColumnVisibility;
   handleToggleColumn: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  theColumnKeys: Array<keyof ColumnVisibility>;
 }) => {
-  const allColumnKeys: Array<keyof ColumnVisibility> = [
-    "Name",
-    "Source",
-    "Tags",
-    "PageURL",
-    "CreatedTime",
-    "EditedTime",
-    "CreatedStart",
-    "CreatedEnd",
-    "PublishedStart",
-    "PublishedEnd",
-    "Area",
-    "Source",
-    "Link",
-    "Type",
-    "Tags",
-    "PageURL",
-    "pageContent",
-  ];
-
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-      {allColumnKeys.map((colName) => (
+      {props.theColumnKeys.map((colName) => (
         <FormControlLabel
           key={colName}
           control={
@@ -354,6 +353,7 @@ const ColumnVisibilityControlModal = (props: {
         <ColumnVisibilityToggles
           visibleColumns={props.visibleColumns}
           handleToggleColumn={props.onToggle}
+          theColumnKeys={allColumnKeys}
         />
 
         <Button onClick={props.onClose} variant="contained" sx={{ mt: 3 }}>
@@ -511,27 +511,8 @@ const TableHeaderCells = (props: {
   visibleColumns: ColumnVisibility;
   sortProps: ReturnType<typeof useTableSorting>["sortProps"];
   sortHandlers: ReturnType<typeof useTableSorting>["sortHandlers"];
+  theColumnKeys: Array<keyof ColumnVisibility>;
 }) => {
-  const allColumnKeys: Array<keyof ColumnVisibility> = [
-    "Name",
-    "Source",
-    "Tags",
-    "PageURL",
-    "CreatedTime",
-    "EditedTime",
-    "CreatedStart",
-    "CreatedEnd",
-    "PublishedStart",
-    "PublishedEnd",
-    "Area",
-    "Source",
-    "Link",
-    "Type",
-    "Tags",
-    "PageURL",
-    "pageContent",
-  ];
-
   // Modified: Only include truly sortable columns
   const sortableColumns: Partial<
     Record<keyof ColumnVisibility, (direction: "asc" | "desc") => void>
@@ -568,7 +549,7 @@ const TableHeaderCells = (props: {
   return (
     <TableHead>
       <TableRow>
-        {allColumnKeys.map((colName) =>
+        {props.theColumnKeys.map((colName) =>
           props.visibleColumns[colName] ? (
             <TableCell key={colName}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -628,38 +609,17 @@ const TableHeaderCells = (props: {
 const TableBodyRows = (props: {
   data: RowPage[];
   visibleColumns: ColumnVisibility;
+  theColumnKeys: Array<keyof ColumnVisibility>;
 }) => {
-  const allColumnKeys: Array<keyof ColumnVisibility> = [
-    "Name",
-    "Source",
-    "Tags",
-    "PageURL",
-    "CreatedTime",
-    "EditedTime",
-    "CreatedStart",
-    "CreatedEnd",
-    "PublishedStart",
-    "PublishedEnd",
-    "Area",
-    "Source",
-    "Link",
-    "Type",
-    "Tags",
-    "PageURL",
-    "pageContent",
-  ];
-
   return (
     <TableBody>
       {props.data.map((row) => (
         <TableRow key={row.myID}>
-          {allColumnKeys.map((colName) =>
+          {props.theColumnKeys.map((colName) =>
             props.visibleColumns[colName] ? (
               <TableCell key={colName}>
                 {colName === "Name" && row.Name}
                 {colName === "Source" && row.Source}
-                "Tags", "PageURL", "", "", "PublishedStart", "PublishedEnd",
-                "Area", "Source",
                 {colName === "CreatedTime" && displayDate(row.CreatedTime)}
                 {colName === "EditedTime" && displayDate(row.EditedTime)}
                 {/* {colName === "CreatedEnd" && displayDate(row.CreatedEnd)} */}
@@ -763,8 +723,13 @@ const CustomTable = (props: { thePages: Page[] }) => {
             visibleColumns={visibleColumns}
             sortProps={sortProps}
             sortHandlers={sortHandlers}
+            theColumnKeys={allColumnKeys}
           />
-          <TableBodyRows data={sortedData} visibleColumns={visibleColumns} />
+          <TableBodyRows
+            data={sortedData}
+            visibleColumns={visibleColumns}
+            theColumnKeys={allColumnKeys}
+          />
         </Table>
       </TableContainer>
 
