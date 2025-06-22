@@ -3,49 +3,6 @@
 import { useState, useMemo } from "react";
 import { SelectChangeEvent } from "@mui/material/Select"; // For Material-UI Select events
 
-// --- Interfaces
-// interface Page {
-//   id: string;
-//   Name: string;
-//   Status: string;
-//   Level: string;
-//   Source: string[];
-//   DateFound: Date;
-//   DayPosted: Date;
-//   ApplicationDeadline: Date;
-//   DateApplied: Date;
-//   ExpireDate: Date;
-//   PostingURL: string;
-//   Connection: string;
-//   State: string[];
-//   Setup: string[];
-//   Company: string[];
-//   Education: string[];
-//   Duties: string[];
-//   Tags: string[];
-//   Tenure: string[];
-//   Location: string;
-//   PageURL: string;
-// }
-
-// interface Page {
-//   id: string;
-//   Name: string;
-//   CreatedTime: Date;
-//   EditedTime: Date;
-//   CreatedStart: Date;
-//   CreatedEnd: Date;
-//   PublishedStart: Date;
-//   PublishedEnd: Date;
-//   Area: string;
-//   Source: string;
-//   Link: string;
-//   Type: string;
-//   Tags: string[];
-//   PageURL: string;
-//   pageContent: string;
-// }
-
 interface RowPage {
   myID: string;
   Name: string;
