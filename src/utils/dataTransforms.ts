@@ -103,19 +103,26 @@ export function mapPagesToCustomTableData(pages: Page[]): RowPage[] {
 
 export function producePropList(
   myTableView: RowPage[],
-  selection: "Tags"
+  selection: keyof RowPage // Changed from "Tags"
+
+  // selection: "Tags"
 ): Item[] {
   // Helper to determine if the property on RowPage is expected to be an array
+  // const isArrayProp = (prop: keyof RowPage) =>
+  //   [
+  //     "Tags",
+  //     "Company",
+  //     "Tenure",
+  //     "Setup",
+  //     "State",
+  //     "Duties",
+  //     "Education",
+  //   ].includes(prop);
   const isArrayProp = (prop: keyof RowPage) =>
     [
       "Tags",
-      "Company",
-      "Tenure",
-      "Setup",
-      "State",
-      "Duties",
-      "Education",
-    ].includes(prop);
+      // Add any other array properties from RowPage if they exist
+    ].includes(prop as string); // Cast to string for includes check if needed
 
   const rawList: string[] = myTableView.reduce<string[]>((accumulator, row) => {
     const propValue = row[selection];
