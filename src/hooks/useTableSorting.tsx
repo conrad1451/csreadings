@@ -14,7 +14,7 @@ interface RowPage {
   Type: string;
   Tags: string[];
   PageURL: string;
-  pageContent: string;
+  // pageContent: string;
 }
 
 // --- Utility Sorting Functions (Can be moved to a separate file like utils/sorts.ts) ---

@@ -18,7 +18,7 @@ export interface ColumnVisibility {
   Type: boolean;
   Tags: boolean;
   PageURL: boolean;
-  pageContent: boolean;
+  // pageContent: boolean;
 }
 // --- Default and Preset Column Visibility Settings ---
 // These were in your original CustomTable file, now moved here for centralization
@@ -37,7 +37,7 @@ const defaultColumnVisibility: ColumnVisibility = {
   Type: true,
   Tags: true,
   PageURL: true,
-  pageContent: true,
+  // pageContent: true,
 };
 
 export const visibilityPresets: Map<string, ColumnVisibility> = new Map();
@@ -58,7 +58,7 @@ visibilityPresets.set("smartphone", {
   Type: true,
   Tags: true,
   PageURL: true,
-  pageContent: true,
+  // pageContent: true,
 });
 
 // --- useColumnVisibility Custom Hook ---

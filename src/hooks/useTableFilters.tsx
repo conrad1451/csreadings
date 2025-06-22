@@ -18,7 +18,7 @@ interface RowPage {
   Type: string;
   Tags: string[];
   PageURL: string;
-  pageContent: string;
+  // pageContent: string;
 }
 
 interface Item {
