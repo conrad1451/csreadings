@@ -1,8 +1,7 @@
 // import { useState, useMemo } from "react";
 import { useState } from "react";
 
-// --- Interfaces (Copied from your original file for completeness) ---
-// Assuming these are defined globally or imported from a shared types file
+// --- Interfaces
 export interface ColumnVisibility {
   myID: boolean;
   Name: boolean;
@@ -21,8 +20,7 @@ export interface ColumnVisibility {
   // pageContent: boolean;
 }
 // --- Default and Preset Column Visibility Settings ---
-// These were in your original CustomTable file, now moved here for centralization
-const defaultColumnVisibility: ColumnVisibility = {
+export const defaultColumnVisibility: ColumnVisibility = {
   myID: true,
   Name: true,
   CreatedTime: true,
@@ -40,13 +38,10 @@ const defaultColumnVisibility: ColumnVisibility = {
   // pageContent: true,
 };
 
-export const visibilityPresets: Map<string, ColumnVisibility> = new Map();
-
-visibilityPresets.set("default", defaultColumnVisibility); // Explicitly set the default
-visibilityPresets.set("smartphone", {
+export const smartphoneVisibility: ColumnVisibility = {
   myID: true,
   Name: true,
-  CreatedTime: true,
+  CreatedTime: false,
   EditedTime: false,
   CreatedStart: true,
   CreatedEnd: false,
@@ -59,7 +54,12 @@ visibilityPresets.set("smartphone", {
   Tags: true,
   PageURL: true,
   // pageContent: true,
-});
+};
+
+export const visibilityPresets: Map<string, ColumnVisibility> = new Map();
+
+visibilityPresets.set("default", defaultColumnVisibility); // Explicitly set the default
+visibilityPresets.set("smartphone", smartphoneVisibility); // Explicitly set the default
 
 // --- useColumnVisibility Custom Hook ---
 
