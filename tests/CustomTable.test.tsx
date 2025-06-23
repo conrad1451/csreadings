@@ -74,71 +74,77 @@ vi.mock("./BasicDropdownList", () => ({
 const mockPages: Page[] = [
   {
     id: "1",
-    Name: "Frontend Engineer",
+    // Name: "[USE RESOURCE] Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+    Name: "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+
     CreatedTime: new Date("2023-01-15T10:00:00Z"),
     EditedTime: new Date("2023-01-16T11:00:00Z"),
     CreatedStart: new Date("2023-01-10T09:00:00Z"),
     CreatedEnd: new Date("2023-01-15T17:00:00Z"),
     PublishedStart: new Date("2023-02-01T08:00:00Z"),
     PublishedEnd: new Date("2023-03-01T08:00:00Z"),
-    Area: "Engineering",
-    Source: "LinkedIn",
-    Link: "https://example.com/fe",
-    Type: "Job Posting",
-    Tags: ["React", "JavaScript", "UI/UX"],
-    PageURL: "https://careers.example.com/frontend",
-    pageContent: "Details about frontend role.",
+    Area: "Career",
+    Source: "Reddit",
+    Link: "https://example.com/fe0",
+    Type: "Forum",
+    Tags: ["Resume", "Computer Science", "Software engineering"],
+    PageURL: "https://notion.so/fe0",
+    pageContent: "",
   },
   {
     id: "2",
-    Name: "Backend Developer",
+    Name: "Secure your data with Descope and Neon RLS",
     CreatedTime: new Date("2023-01-20T10:00:00Z"),
     EditedTime: new Date("2023-01-21T11:00:00Z"),
     CreatedStart: new Date("2023-01-18T09:00:00Z"),
     CreatedEnd: new Date("2023-01-20T17:00:00Z"),
     PublishedStart: new Date("2023-02-05T08:00:00Z"),
     PublishedEnd: new Date("2023-03-05T08:00:00Z"),
-    Area: "Engineering",
-    Source: "Indeed",
-    Link: "https://example.com/be",
-    Type: "Job Posting",
-    Tags: ["Node.js", "Python", "APIs"],
-    PageURL: "https://careers.example.com/backend",
-    pageContent: "Details about backend role.",
+    Area: "CS",
+    Source: "Neon",
+    Link: "https://neon.tech/",
+    Type: "Article",
+    Tags: ["Web Standards: JSON Web Token (JWT)", "WebDev (web development)"],
+    PageURL: "https://notion.so/fe1",
+    pageContent: "",
   },
   {
     id: "3",
-    Name: "Data Scientist",
-    CreatedTime: new Date("2023-02-01T10:00:00Z"),
-    EditedTime: new Date("2023-02-02T11:00:00Z"),
-    CreatedStart: new Date("2023-01-28T09:00:00Z"),
-    CreatedEnd: new Date("2023-02-01T17:00:00Z"),
-    PublishedStart: new Date("2023-02-10T08:00:00Z"),
-    PublishedEnd: new Date("2023-03-10T08:00:00Z"),
-    Area: "Data",
-    Source: "Glassdoor",
-    Link: "https://example.com/ds",
-    Type: "Job Posting",
-    Tags: ["Machine Learning", "Statistics", "R"],
-    PageURL: "https://careers.example.com/datascience",
-    pageContent: "Details about data scientist role.",
+    Name: "Build a Waitlist App With Descope Flows and Airtable",
+    CreatedTime: new Date("2023-01-20T10:00:00Z"),
+    EditedTime: new Date("2023-01-21T11:00:00Z"),
+    CreatedStart: new Date("2023-01-18T09:00:00Z"),
+    CreatedEnd: new Date("2023-01-20T17:00:00Z"),
+    PublishedStart: new Date("2023-02-05T08:00:00Z"),
+    PublishedEnd: new Date("2023-03-05T08:00:00Z"),
+    Area: "CS",
+    Source: "Neon",
+    Link: "https://neon.tech/",
+    Type: "Article",
+    Tags: ["Web Standards: JSON Web Token (JWT)", "WebDev (web development)"],
+    PageURL: "https://notion.so/fe2",
+    pageContent: "",
   },
   {
     id: "4",
-    Name: "QA Engineer",
-    CreatedTime: new Date("2023-01-10T10:00:00Z"),
-    EditedTime: new Date("2023-01-11T11:00:00Z"),
-    CreatedStart: new Date("2023-01-05T09:00:00Z"),
-    CreatedEnd: new Date("2023-01-10T17:00:00Z"),
-    PublishedStart: new Date("2023-01-25T08:00:00Z"),
-    PublishedEnd: new Date("2023-02-25T08:00:00Z"),
-    Area: "Quality Assurance",
-    Source: "Company Website",
-    Link: "https://example.com/qa",
-    Type: "Job Posting",
-    Tags: ["Testing", "Automation", "Manual"],
-    PageURL: "https://careers.example.com/qa",
-    pageContent: "Details about QA role.",
+    Name: "Add User Information to JWT Response Using Descope Flows",
+    CreatedTime: new Date("2023-01-20T10:00:00Z"),
+    EditedTime: new Date("2023-01-21T11:00:00Z"),
+    CreatedStart: new Date("2023-01-18T09:00:00Z"),
+    CreatedEnd: new Date("2023-01-20T17:00:00Z"),
+    PublishedStart: new Date("2023-02-05T08:00:00Z"),
+    PublishedEnd: new Date("2023-03-05T08:00:00Z"),
+    Area: "CS",
+    Source: "Neon",
+    Link: "https://descope.com/",
+    Type: "Article",
+    Tags: [
+      "Web Standards: JSON Web Token (JWT)",
+      "WebDev (web development)",
+      "Databases",
+    ],
+    PageURL: "https://notion.so/fe3",
+    pageContent: "",
   },
 ];
 
@@ -178,29 +184,35 @@ describe("CustomTable - Name Column Sorting", () => {
       (row) => within(row).getAllByRole("cell")[0].textContent
     );
 
-    // Expected ascending order: Backend Developer, Data Scientist, Frontend Engineer, QA Engineer
+    // Expected ascending order:
+    //     "Add User Information to JWT Response Using Descope Flows",
+    //     "Build a Waitlist App With Descope Flows and Airtable",
+    //     "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+    //     "Secure your data with Descope and Neon RLS",
     // Based on alphabetical sort of the mockPages Names
     expect(sortedNamesAsc).toEqual(
       [
-        "Backend Developer",
-        "Data Scientist",
-        "Frontend Engineer",
-        "QA Engineer",
+        // "[USE RESOURCE] Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+        "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+        "Add User Information to JWT Response Using Descope Flows",
+        "Build a Waitlist App With Descope Flows and Airtable",
+        "Secure your data with Descope and Neon RLS",
       ].sort()
     ); // Use sort() to confirm alphabetical order
 
     // Re-evaluating the expected sorted order from your mock data
     // The initial mockPages order is:
-    // 1. Frontend Engineer
-    // 2. Backend Developer
-    // 3. Data Scientist
-    // 4. QA Engineer
+    // 1. "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+    // 2. "Add User Information to JWT Response Using Descope Flows",
+    // 3. "Build a Waitlist App With Descope Flows and Airtable",
+    // 4. "Secure your data with Descope and Neon RLS",
+
     // Alphabetical Ascending: Backend Developer, Data Scientist, Frontend Engineer, QA Engineer
     expect(sortedNamesAsc).toEqual([
-      "Backend Developer",
-      "Data Scientist",
-      "Frontend Engineer",
-      "QA Engineer",
+      "Add User Information to JWT Response Using Descope Flows",
+      "Build a Waitlist App With Descope Flows and Airtable",
+      "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+      "Secure your data with Descope and Neon RLS",
     ]);
   });
 
@@ -221,12 +233,18 @@ describe("CustomTable - Name Column Sorting", () => {
       (row) => within(row).getAllByRole("cell")[0].textContent
     );
 
-    // Expected descending order: QA Engineer, Frontend Engineer, Data Scientist, Backend Developer
+    // Expected desconding order:
+    //     "Secure your data with Descope and Neon RLS",
+    //     "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+    //     "Build a Waitlist App With Descope Flows and Airtable",
+    //     "Add User Information to JWT Response Using Descope Flows",
+
+    // Based on alphabetical sort of the mockPages Names
     expect(sortedNamesDesc).toEqual([
-      "QA Engineer",
-      "Frontend Engineer",
-      "Data Scientist",
-      "Backend Developer",
+      "Secure your data with Descope and Neon RLS",
+      "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+      "Build a Waitlist App With Descope Flows and Airtable",
+      "Add User Information to JWT Response Using Descope Flows",
     ]);
   });
 
@@ -287,10 +305,10 @@ describe("CustomTable - Name Column Sorting", () => {
     );
 
     expect(sortedNamesDescAfterReset).toEqual([
-      "QA Engineer",
-      "Frontend Engineer",
-      "Data Scientist",
-      "Backend Developer",
+      "Secure your data with Descope and Neon RLS",
+      "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+      "Build a Waitlist App With Descope Flows and Airtable",
+      "Add User Information to JWT Response Using Descope Flows",
     ]);
   });
 });
