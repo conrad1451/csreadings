@@ -42,7 +42,6 @@ interface RowPage {
 // --- Mock Data ---
 // Creating a diverse set of mock pages to test various filters and sorts
 
-// CHQ: Gemini AI made this function
 /**
  * Generates a random date within a specified range.
  * @returns A Date object.
@@ -55,7 +54,6 @@ function getRandomDate(): Date {
   return new Date(randomTimestamp);
 }
 
-// CHQ: Gemini AI made this function
 /**
  * Generates a random string of a given length.
  * @param length The length of the string.
@@ -72,7 +70,6 @@ function getRandomString(length: number): string {
   return result;
 }
 
-// CHQ: Gemini AI made this function
 /**
  * Generates a random Page object with the 'Area' property set to "CS".
  * @param id The ID for the new page.
