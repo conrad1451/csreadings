@@ -265,8 +265,8 @@ describe("useTableFilters", () => {
 
       expect(result.current.filterProps.isPageFilterEnabled).toBe(false);
       expect(result.current.filterProps.pageFilterText).toBe(""); // Should be reset
-      expect(result.current.filteredData.length).toBe(mockPages.length); // Purposefully broken - trigger fail in CI/CD pipeline
-      // expect(result.current.filteredData.length).toBe(mockRowPages.length); // Should show all data
+      // expect(result.current.filteredData.length).toBe(mockPages.length); // Purposefully broken - trigger fail in CI/CD pipeline
+      expect(result.current.filteredData.length).toBe(mockRowPages.length); // Should show all data
     });
 
     it("should reset page filter text when toggled off", () => {
