@@ -253,20 +253,21 @@ describe("useTableFilters", () => {
     });
 
     // FIXME: CHQ: test broken
-    // it("should ignore filter when disabled", () => {
-    //   const { result } = renderHook(() => useTableFilters(mockRowPages));
+    it("should ignore filter when disabled", () => {
+      const { result } = renderHook(() => useTableFilters(mockRowPages));
 
-    //   // Enable and set text, then disable
-    //   act(() => {
-    //     result.current.filterHandlers.togglePageFilter();
-    //     result.current.filterHandlers.setPageFilterText("testing");
-    //     result.current.filterHandlers.togglePageFilter(); // Disable
-    //   });
+      // Enable and set text, then disable
+      act(() => {
+        result.current.filterHandlers.togglePageFilter();
+        result.current.filterHandlers.setPageFilterText("testing");
+        result.current.filterHandlers.togglePageFilter(); // Disable
+      });
 
-    //   expect(result.current.filterProps.isPageFilterEnabled).toBe(false);
-    //   expect(result.current.filterProps.pageFilterText).toBe(""); // Should be reset
-    //   expect(result.current.filteredData.length).toBe(mockPages.length); // Should show all data
-    // });
+      expect(result.current.filterProps.isPageFilterEnabled).toBe(false);
+      expect(result.current.filterProps.pageFilterText).toBe(""); // Should be reset
+      expect(result.current.filteredData.length).toBe(mockPages.length); // Purposefully broken - trigger fail in CI/CD pipeline
+      // expect(result.current.filteredData.length).toBe(mockRowPages.length); // Should show all data
+    });
 
     it("should reset page filter text when toggled off", () => {
       const { result } = renderHook(() => useTableFilters(mockRowPages));
