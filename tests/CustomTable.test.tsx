@@ -74,7 +74,9 @@ vi.mock("./BasicDropdownList", () => ({
 const mockPages: Page[] = [
   {
     id: "1",
-    Name: "[USE RESOURCE] Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+    // Name: "[USE RESOURCE] Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+    Name: "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+
     CreatedTime: new Date("2023-01-15T10:00:00Z"),
     EditedTime: new Date("2023-01-16T11:00:00Z"),
     CreatedStart: new Date("2023-01-10T09:00:00Z"),
@@ -182,29 +184,35 @@ describe("CustomTable - Name Column Sorting", () => {
       (row) => within(row).getAllByRole("cell")[0].textContent
     );
 
-    // Expected ascending order: Backend Developer, Data Scientist, Frontend Engineer, QA Engineer
+    // Expected ascending order:
+    //     "Add User Information to JWT Response Using Descope Flows",
+    //     "Build a Waitlist App With Descope Flows and Airtable",
+    //     "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+    //     "Secure your data with Descope and Neon RLS",
     // Based on alphabetical sort of the mockPages Names
     expect(sortedNamesAsc).toEqual(
       [
-        "Backend Developer",
-        "Data Scientist",
-        "Frontend Engineer",
-        "QA Engineer",
+        // "[USE RESOURCE] Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+        "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+        "Add User Information to JWT Response Using Descope Flows",
+        "Build a Waitlist App With Descope Flows and Airtable",
+        "Secure your data with Descope and Neon RLS",
       ].sort()
     ); // Use sort() to confirm alphabetical order
 
     // Re-evaluating the expected sorted order from your mock data
     // The initial mockPages order is:
-    // 1. Frontend Engineer
-    // 2. Backend Developer
-    // 3. Data Scientist
-    // 4. QA Engineer
+    // 1. "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+    // 2. "Add User Information to JWT Response Using Descope Flows",
+    // 3. "Build a Waitlist App With Descope Flows and Airtable",
+    // 4. "Secure your data with Descope and Neon RLS",
+
     // Alphabetical Ascending: Backend Developer, Data Scientist, Frontend Engineer, QA Engineer
     expect(sortedNamesAsc).toEqual([
-      "Backend Developer",
-      "Data Scientist",
-      "Frontend Engineer",
-      "QA Engineer",
+      "Add User Information to JWT Response Using Descope Flows",
+      "Build a Waitlist App With Descope Flows and Airtable",
+      "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+      "Secure your data with Descope and Neon RLS",
     ]);
   });
 
@@ -225,12 +233,18 @@ describe("CustomTable - Name Column Sorting", () => {
       (row) => within(row).getAllByRole("cell")[0].textContent
     );
 
-    // Expected descending order: QA Engineer, Frontend Engineer, Data Scientist, Backend Developer
+    // Expected desconding order:
+    //     "Secure your data with Descope and Neon RLS",
+    //     "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+    //     "Build a Waitlist App With Descope Flows and Airtable",
+    //     "Add User Information to JWT Response Using Descope Flows",
+
+    // Based on alphabetical sort of the mockPages Names
     expect(sortedNamesDesc).toEqual([
-      "QA Engineer",
-      "Frontend Engineer",
-      "Data Scientist",
-      "Backend Developer",
+      "Secure your data with Descope and Neon RLS",
+      "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+      "Build a Waitlist App With Descope Flows and Airtable",
+      "Add User Information to JWT Response Using Descope Flows",
     ]);
   });
 
@@ -291,10 +305,10 @@ describe("CustomTable - Name Column Sorting", () => {
     );
 
     expect(sortedNamesDescAfterReset).toEqual([
-      "QA Engineer",
-      "Frontend Engineer",
-      "Data Scientist",
-      "Backend Developer",
+      "Secure your data with Descope and Neon RLS",
+      "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+      "Build a Waitlist App With Descope Flows and Airtable",
+      "Add User Information to JWT Response Using Descope Flows",
     ]);
   });
 });
