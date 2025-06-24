@@ -43,68 +43,6 @@ interface RowPage {
   pageContent: string;
 }
 
-interface Item {
-  value: string;
-}
-
-/**
- * Generates a random date within a specified range.
- * @returns A Date object.
- */
-function getRandomDate(): Date {
-  const start = new Date(2023, 0, 1); // Jan 1, 2023
-  const end = new Date(2025, 11, 31); // Dec 31, 2025
-  const randomTimestamp =
-    start.getTime() + Math.random() * (end.getTime() - start.getTime());
-  return new Date(randomTimestamp);
-}
-
-/**
- * Generates a random string of a given length.
- * @param length The length of the string.
- * @returns A random string.
- */
-function getRandomString(length: number): string {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
-/**
- * Generates a random Page object with the 'Area' property set to "CS".
- * @param id The ID for the new page.
- * @returns A randomly generated Page object.
- */
-function generateRandomCSPage(id: string): Page {
-  return {
-    id: id,
-    Name: `Random CS Project ${getRandomString(5)}`,
-    CreatedTime: getRandomDate(),
-    EditedTime: getRandomDate(),
-    CreatedStart: getRandomDate(),
-    CreatedEnd: getRandomDate(),
-    PublishedStart: getRandomDate(),
-    PublishedEnd: getRandomDate(),
-    Area: "CS", // Explicitly set to "CS" as requested
-    Source: `Source ${getRandomString(3)}`,
-    Link: `https://example.com/cs-link-${getRandomString(7)}`,
-    Type: Math.random() > 0.5 ? "Article" : "Tutorial",
-    Tags: [
-      "CS",
-      Math.random() > 0.5 ? "Algorithms" : "Data Structures",
-      Math.random() > 0.5 ? "Web Dev" : "AI/ML",
-      getRandomString(4),
-    ],
-    PageURL: `https://notion.so/cs-page-${getRandomString(8)}`,
-    pageContent: `Randomly generated content for CS project ${getRandomString(100)}.`,
-  };
-}
-
 const mockRowPages: RowPage[] = [
   {
     myID: "0",
