@@ -57,7 +57,12 @@ const mockRowPages: RowPage[] = [
     Source: "Reddit",
     Link: "https://reddit.com",
     Type: "Article",
-    Tags: ["React", "TypeScript", "Frontend"],
+    Tags: [
+      "React",
+      "TypeScript",
+      "Frontend",
+      "(YouTube) Fireship - 100 Seconds",
+    ],
     PageURL: "https://notion.so/fe0",
     pageContent: "",
   },
@@ -254,11 +259,17 @@ describe("useTableFilters", () => {
 
       act(() => {
         result.current.filterHandlers.handleTagCountChange({
-          target: { value: 3 },
+          // CHQ: added a fourth tag to the target page so updating the target filter to 4 tags
+          target: { value: 4 },
+          // target: { value: 3 },
         } as SelectChangeEvent<number | string>);
       });
 
-      expect(result.current.filterProps.tagCountFilter).toBe(3);
+      // CHQ: added a fourth tag to "Progressive Web Apps in 100 Seconds Build a PWA from Scratch"
+      //  so updating the target filter to 4 tags so the intended page shows up in the tests
+      expect(result.current.filterProps.tagCountFilter).toBe(4);
+      // expect(result.current.filterProps.tagCountFilter).toBe(3);
+
       expect(result.current.filteredData.map((j) => j.Name)).toEqual([
         "Progressive Web Apps in 100 Seconds Build a PWA from Scratch",
       ]);
@@ -446,24 +457,26 @@ describe("useTableFilters", () => {
     // });
 
     // FIXME: CHQ
-    // it("should ignore filter when disabled for tags", () => {
-    //   const { result } = renderHook(() => useTableFilters(mockRowPages));
+    it("should ignore filter when disabled for tags", () => {
+      const { result } = renderHook(() => useTableFilters(mockRowPages));
 
-    //   act(() => {
-    //     result.current.filterHandlers.toggleTagFilter(); // Enable
-    //     result.current.filterHandlers.handleTagNameChange({ value: "React" });
-    //   });
-    //   expect(result.current.filteredData.length).toBe(1);
+      act(() => {
+        result.current.filterHandlers.toggleTagFilter(); // Enable
+        result.current.filterHandlers.handleTagNameChange({ value: "React" });
+      });
+      // CHQ: Now there are three entries with the "React" tag
+      // expect(result.current.filteredData.length).toBe(1);
+      expect(result.current.filteredData.length).toBe(3);
 
-    //   act(() => {
-    //     result.current.filterHandlers.toggleTagFilter(); // Disable
-    //   });
-    //   expect(result.current.filterProps.isTagFilterEnabled).toBe(false);
-    //   expect(result.current.filterProps.tagNameList).toEqual(["React"]); // List state persists, but filter is off
-    //   expect(result.current.filteredData.length).toBe(mockRowPages.length); // All data shown
+      act(() => {
+        result.current.filterHandlers.toggleTagFilter(); // Disable
+      });
+      expect(result.current.filterProps.isTagFilterEnabled).toBe(false);
+      expect(result.current.filterProps.tagNameList).toEqual(["React"]); // List state persists, but filter is off
+      expect(result.current.filteredData.length).toBe(mockRowPages.length); // All data shown
 
-    //   // expect(result.current.filteredData.length).toBe(mockPages.length); // All data shown
-    // });
+      // expect(result.current.filteredData.length).toBe(mockPages.length); // All data shown
+    });
   });
 
   // Test Case 6: Combined Filters
