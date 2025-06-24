@@ -576,7 +576,6 @@ const TableBodyRows = (props: {
             props.visibleColumns[colName] ? (
               <TableCell key={colName}>
                 {colName === "Name" && row.Name}
-                {colName === "Source" && row.Source}
                 {colName === "CreatedTime" && displayDate(row.CreatedTime)}
                 {colName === "EditedTime" && displayDate(row.EditedTime)}
                 {/* {colName === "CreatedEnd" && displayDate(row.CreatedEnd)} */}
