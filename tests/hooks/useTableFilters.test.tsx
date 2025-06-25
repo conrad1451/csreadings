@@ -390,10 +390,11 @@ describe("useTableFilters", () => {
 
       act(() => {
         result.current.filterHandlers.toggleSourceFilter();
-        result.current.filterHandlers.handleSourceChange({ value: "Rejected" });
+        result.current.filterHandlers.handleSourceChange({ value: "YouTube" });
       });
-      expect(result.current.filterProps.sourceSelected).toBe("Rejected");
-      expect(result.current.filteredData.length).toBe(1); // Data Scientist
+      expect(result.current.filterProps.sourceSelected).toBe("YouTube");
+      // YouTube - there are 2 entries with a source of YouTube
+      expect(result.current.filteredData.length).toBe(2); // YouTube
       //
       act(() => {
         result.current.filterHandlers.resetSourceFilters();
