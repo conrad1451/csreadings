@@ -101,6 +101,20 @@ export function mapPagesToCustomTableData(pages: Page[]): RowPage[] {
   );
 }
 
+/**
+ * Generates a list of unique property values from an array of RowPage objects,
+ * suitable for populating dropdown filters. It can handle both single-string properties
+ * (like 'Source' or 'Area') and array-of-string properties (like 'Tags').
+ *
+ * @param myTableView An array of `RowPage` objects representing the current table data.
+ * This data is used to extract the property values.
+ * @param selection The key (property name) from `RowPage` whose values are to be extracted.
+ * This function is designed to work with string or string array properties.
+ * Example: "Tags", "Source", "Area".
+ * @returns An array of `Item` objects, where each `Item` has a `value` property (string).
+ * Each `value` in the returned list is a unique, non-empty string extracted
+ * from the specified `selection` property across all `myTableView` rows.
+ */
 export function producePropList(
   myTableView: RowPage[],
   selection: keyof RowPage
