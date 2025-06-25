@@ -85,7 +85,7 @@ const allColumnKeys: Array<keyof ColumnVisibility> = [
   "Name",
   "CreatedTime",
   "EditedTime",
-  "CreatedStart",
+  "NotedTime",
   "CreatedEnd",
   "PublishedStart",
   "PublishedEnd",
@@ -475,10 +475,10 @@ const TableHeaderCells = (props: {
     Record<keyof ColumnVisibility, (direction: "asc" | "desc") => void>
   > = {
     Name: props.sortHandlers.handleNameSort,
-    Source: props.sortHandlers.handleSourceSort,
     CreatedTime: props.sortHandlers.handleCreatedTimeSort,
     EditedTime: props.sortHandlers.handleEditedTimeSort,
-    CreatedStart: props.sortHandlers.handleNotedTimeSort,
+    NotedTime: props.sortHandlers.handleNotedTimeSort,
+    Source: props.sortHandlers.handleSourceSort,
   };
 
   // Modified: Only include sort directions for truly sortable columns
@@ -486,10 +486,10 @@ const TableHeaderCells = (props: {
     Record<keyof ColumnVisibility, "asc" | "desc" | null>
   > = {
     Name: props.sortProps.sortDirectionName,
-    Source: props.sortProps.sortDirectionSource,
     CreatedTime: props.sortProps.sortDirectionCreatedTime,
     EditedTime: props.sortProps.sortDirectionEditedTime,
-    CreatedStart: props.sortProps.sortDirectionCreatedTime,
+    NotedTime: props.sortProps.sortDirectionNotedTime,
+    Source: props.sortProps.sortDirectionSource,
   };
 
   // Modified: Only include reset handlers for truly sortable columns
@@ -497,10 +497,10 @@ const TableHeaderCells = (props: {
     Record<keyof ColumnVisibility, () => void>
   > = {
     Name: props.sortHandlers.resetNameSort,
-    Source: props.sortHandlers.resetNotedTimeSort,
     CreatedTime: props.sortHandlers.resetCreatedTimeSort,
     EditedTime: props.sortHandlers.resetEditedTimeSort,
-    CreatedStart: props.sortHandlers.resetNotedTimeSort,
+    NotedTime: props.sortHandlers.resetNotedTimeSort,
+    Source: props.sortHandlers.resetSourceSort,
   };
 
   return (
@@ -638,10 +638,10 @@ const CustomTable = (props: { thePages: Page[] }) => {
     [sortedData]
   );
 
-  const AreaList = useMemo(
-    () => producePropList(sortedData, "Area"),
-    [sortedData]
-  );
+  // const AreaList = useMemo(
+  //   () => producePropList(sortedData, "Area"),
+  //   [sortedData]
+  // );
 
   return (
     <Box sx={{ p: 2 }}>
