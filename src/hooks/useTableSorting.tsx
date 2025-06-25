@@ -54,7 +54,9 @@ function sortByStringComparator(
 // logic to push invalid entries to the end of the list
 /**
  * Comparator function for sorting RowPage objects by a Date property.
- * Handles cases where dates might be missing or invalid.
+ * Handles cases where dates might be missing or invalid by consistently
+ * pushing them to the end of the sorted list (either ascending or descending).
+ *
  * @param a - First RowPage object.
  * @param b - Second RowPage object.
  * @param direction - Sort direction ("asc" or "desc").
@@ -70,24 +72,38 @@ function sortByDateComparator(
     | "CreatedTime"
     | "EditedTime"
     | "PublishedStart"
-    | "PublishedEnd" // Removed "Source" as it's a string
+    | "PublishedEnd"
 ): number {
-  // Convert dates to milliseconds for comparison.
-  // Treat invalid/missing dates as -Infinity to push them to end in ascending sort
-  // or +Infinity to push them to end in descending sort (making them consistent 'last').
-  const dateA =
-    a[dateKey] instanceof Date && !isNaN(a[dateKey].getTime())
-      ? a[dateKey].getTime()
-      : direction === "asc"
-        ? -Infinity
-        : Infinity; // Push invalid/missing to end
-  const dateB =
-    b[dateKey] instanceof Date && !isNaN(b[dateKey].getTime())
-      ? b[dateKey].getTime()
-      : direction === "asc"
-        ? -Infinity
-        : Infinity; // Push invalid/missing to end
+  // Helper to safely get the time in milliseconds from a date value.
+  // Returns +/-Infinity if the date is invalid or missing, ensuring consistent placement in sort.
+  const getSafeTime = (
+    dateValue: Date | any,
+    sortDirection: "asc" | "desc"
+  ): number => {
+    let time: number;
 
+    if (dateValue instanceof Date) {
+      time = dateValue.getTime();
+    } else if (dateValue) {
+      // If it's not a Date object but is truthy (e.g., a string)
+      const parsedDate = new Date(dateValue);
+      time = parsedDate.getTime();
+    } else {
+      // If dateValue is falsy (null, undefined, etc.)
+      time = sortDirection === "asc" ? Infinity : -Infinity; // Push falsy/missing to the end
+    }
+
+    // If getTime() results in NaN (Invalid Date), treat it as Infinity to push it to the end.
+    if (isNaN(time)) {
+      return sortDirection === "asc" ? Infinity : -Infinity;
+    }
+    return time;
+  };
+
+  const dateA = getSafeTime(a[dateKey], direction);
+  const dateB = getSafeTime(b[dateKey], direction);
+
+  // Normal comparison for valid dates
   if (dateA < dateB) {
     return direction === "asc" ? -1 : 1;
   }
