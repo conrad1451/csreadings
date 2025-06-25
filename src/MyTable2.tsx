@@ -24,7 +24,7 @@ import {
 } from "@mui/material";
 // import { SelectChangeEvent } from "@mui/material/Select";
 
-import BasicDownshift from "./BasicDropdownList";
+import BasicDownshift from "./components/BasicDropdownList";
 
 // --- Import Custom Hooks ---
 import { useTableFilters } from "./hooks/useTableFilters";
@@ -85,7 +85,7 @@ const allColumnKeys: Array<keyof ColumnVisibility> = [
   "Name",
   "CreatedTime",
   "EditedTime",
-  "CreatedStart",
+  "NotedTime",
   "CreatedEnd",
   "PublishedStart",
   "PublishedEnd",
@@ -273,6 +273,7 @@ const FilterControlsSection = (props: {
   filterProps: ReturnType<typeof useTableFilters>["filterProps"];
   filterHandlers: ReturnType<typeof useTableFilters>["filterHandlers"];
   derivedLists: ReturnType<typeof useTableFilters>["derivedLists"];
+  sourceList: Item[];
   tagList: Item[];
 }) => {
   return (
@@ -357,8 +358,24 @@ const FilterControlsSection = (props: {
         />
         {props.filterProps.isTagFilterEnabled && (
           <BasicDownshift
+            // CHQ: below worked
+            // items={["props.tagList", "ddd"].map((item) => {
+            //   return { value: item };
+            // })}
             items={props.tagList}
             labelText="Select Tags"
+            // CHQ: below worked
+            // CHQ: when user makes their selection, this prints
+            // the text of that selection to the console
+            // handlethechange={(selection) => {
+            //   if (selection !== null) {
+            //     console.log(String(selection.value));
+            //   } else {
+            //     console.log("there is an error");
+            //   }
+            // }}
+
+            // handlethechange={(selection) => alert(String(selection))}
             handlethechange={props.filterHandlers.handleTagNameChange}
           />
         )}
@@ -377,6 +394,41 @@ const FilterControlsSection = (props: {
           Reset
         </Button>
       </Box>
+
+      {/* Source Filter (Single-Select) */}
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 2 }}>
+        <Typography>Filter by Source:</Typography>
+        <Switch
+          checked={props.filterProps.isSourceFilterEnabled}
+          onChange={props.filterHandlers.toggleSourceFilter}
+        />
+        {props.filterProps.isSourceFilterEnabled && (
+          <BasicDownshift
+            // CHQ: below worked
+            // items={["props.tagList", "ddd"].map((item) => {
+            //   return { value: item };
+            // })}
+            items={props.sourceList}
+            labelText="Select Source"
+            handlethechange={props.filterHandlers.handleSourceChange}
+          />
+        )}
+        {props.filterProps.sourceSelected !== "" && (
+          <Typography variant="caption" sx={{ ml: 1 }}>
+            {/* Selected: {props.filterProps.sourceSelected.join(", ")} */}
+            Selected: {props.filterProps.sourceSelected}
+          </Typography>
+        )}
+        <Button
+          onClick={props.filterHandlers.resetSourceFilters}
+          disabled={
+            !props.filterProps.isSourceFilterEnabled &&
+            props.filterProps.sourceSelected === ""
+          }
+        >
+          Reset
+        </Button>
+      </Box>
     </Box>
   );
 };
@@ -390,7 +442,7 @@ function displayListInBulletPoints(arr: string[] | undefined) {
       style={{
         marginLeft: "0px",
         paddingLeft: "2px",
-        listStyleType: "none", // To remove default bullets if preferred
+        // listStyleType: "none", // To remove default bullets if preferred
       }}
     >
       {arr.map((point, pointIndex) => (
@@ -423,10 +475,10 @@ const TableHeaderCells = (props: {
     Record<keyof ColumnVisibility, (direction: "asc" | "desc") => void>
   > = {
     Name: props.sortHandlers.handleNameSort,
-    Source: props.sortHandlers.handleSourceSort,
     CreatedTime: props.sortHandlers.handleCreatedTimeSort,
     EditedTime: props.sortHandlers.handleEditedTimeSort,
-    CreatedStart: props.sortHandlers.handleNotedTimeSort,
+    NotedTime: props.sortHandlers.handleNotedTimeSort,
+    Source: props.sortHandlers.handleSourceSort,
   };
 
   // Modified: Only include sort directions for truly sortable columns
@@ -434,10 +486,10 @@ const TableHeaderCells = (props: {
     Record<keyof ColumnVisibility, "asc" | "desc" | null>
   > = {
     Name: props.sortProps.sortDirectionName,
-    Source: props.sortProps.sortDirectionSource,
     CreatedTime: props.sortProps.sortDirectionCreatedTime,
     EditedTime: props.sortProps.sortDirectionEditedTime,
-    CreatedStart: props.sortProps.sortDirectionCreatedTime,
+    NotedTime: props.sortProps.sortDirectionNotedTime,
+    Source: props.sortProps.sortDirectionSource,
   };
 
   // Modified: Only include reset handlers for truly sortable columns
@@ -445,10 +497,10 @@ const TableHeaderCells = (props: {
     Record<keyof ColumnVisibility, () => void>
   > = {
     Name: props.sortHandlers.resetNameSort,
-    Source: props.sortHandlers.resetNotedTimeSort,
     CreatedTime: props.sortHandlers.resetCreatedTimeSort,
     EditedTime: props.sortHandlers.resetEditedTimeSort,
-    CreatedStart: props.sortHandlers.resetNotedTimeSort,
+    NotedTime: props.sortHandlers.resetNotedTimeSort,
+    Source: props.sortHandlers.resetSourceSort,
   };
 
   return (
@@ -524,7 +576,6 @@ const TableBodyRows = (props: {
             props.visibleColumns[colName] ? (
               <TableCell key={colName}>
                 {colName === "Name" && row.Name}
-                {colName === "Source" && row.Source}
                 {colName === "CreatedTime" && displayDate(row.CreatedTime)}
                 {colName === "EditedTime" && displayDate(row.EditedTime)}
                 {/* {colName === "CreatedEnd" && displayDate(row.CreatedEnd)} */}
@@ -581,6 +632,17 @@ const CustomTable = (props: { thePages: Page[] }) => {
     () => producePropList(sortedData, "Tags"),
     [sortedData]
   );
+
+  const sourceList = useMemo(
+    () => producePropList(sortedData, "Source"),
+    [sortedData]
+  );
+
+  // const AreaList = useMemo(
+  //   () => producePropList(sortedData, "Area"),
+  //   [sortedData]
+  // );
+
   return (
     <Box sx={{ p: 2 }}>
       {/* Table Controls Section */}
@@ -606,6 +668,7 @@ const CustomTable = (props: { thePages: Page[] }) => {
           filterProps={filterProps}
           filterHandlers={filterHandlers}
           derivedLists={derivedLists}
+          sourceList={sourceList}
           tagList={tagList}
         />
       </Box>
