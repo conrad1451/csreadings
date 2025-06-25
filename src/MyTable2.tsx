@@ -24,7 +24,7 @@ import {
 } from "@mui/material";
 // import { SelectChangeEvent } from "@mui/material/Select";
 
-import BasicDownshift from "./BasicDropdownList";
+import BasicDownshift from "./components/BasicDropdownList";
 
 // --- Import Custom Hooks ---
 import { useTableFilters } from "./hooks/useTableFilters";
