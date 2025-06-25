@@ -1,25 +1,5 @@
 import { useState, useMemo } from "react";
-interface RowPage {
-  myID: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  // pageContent: string;
-}
 
-// --- Utility Sorting Functions (Can be moved to a separate file like utils/sorts.ts) ---
-
-// CHQ: Gemini AI generated function as part of refactoring for debugging purposes
 /**
  * Generic comparator function for sorting RowPage objects by any string property.
  * @param a - First RowPage object.
@@ -28,6 +8,8 @@ interface RowPage {
  * @param key - The key (property name) of the string field to sort by.
  * @returns -1 if a < b, 1 if a > b, 0 if equal, based on direction.
  */
+
+import { RowPage } from "../utils/dataTransforms";
 function sortByStringComparator(
   a: RowPage,
   b: RowPage,
