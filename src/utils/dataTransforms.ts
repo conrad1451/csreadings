@@ -4,7 +4,7 @@ export interface Item {
   value: string;
 }
 
-interface Page {
+export interface Page {
   id: string;
   Name: string;
   CreatedTime: Date;
@@ -22,7 +22,7 @@ interface Page {
   // pageContent: string;
 }
 
-interface RowPage {
+export interface RowPage {
   myID: string;
   Name: string;
   CreatedTime: Date;

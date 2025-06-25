@@ -3,41 +3,7 @@ import { createCustomTableData } from "../../src/utils/dataTransforms";
 
 import { it, expect, describe } from "vitest";
 
-interface Page {
-  id: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  pageContent: string;
-}
-
-interface RowPage {
-  myID: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  pageContent: string;
-}
+import { RowPage, Page } from "../../src/utils/dataTransforms";
 
 // --- Mock Data ---
 // Creating a diverse set of mock pages to test various filters and sorts
@@ -96,7 +62,7 @@ function generateRandomCSPage(id: string): Page {
       getRandomString(4),
     ],
     PageURL: `https://notion.so/cs-page-${getRandomString(8)}`,
-    pageContent: `Randomly generated content for CS project ${getRandomString(100)}.`,
+    // pageContent: `Randomly generated content for CS project ${getRandomString(100)}.`,
   };
 }
 
@@ -116,7 +82,7 @@ const mockPages: Page[] = [
     Type: "Article",
     Tags: ["React", "TypeScript", "Frontend"],
     PageURL: "https://notion.so/fe1",
-    pageContent: "",
+    // pageContent: "",
   },
   {
     id: "1",
@@ -133,7 +99,7 @@ const mockPages: Page[] = [
     Type: "Article",
     Tags: ["React", "TypeScript", "Frontend"],
     PageURL: "https://notion.so/fe1",
-    pageContent: "",
+    // pageContent: "",
   },
   // Replaced with randomly generated data in the new order
   generateRandomCSPage("2"),
@@ -158,8 +124,8 @@ describe("createCustomTableData", () => {
       targetPage.Link,
       targetPage.Type,
       targetPage.Tags,
-      targetPage.PageURL,
-      targetPage.pageContent
+      targetPage.PageURL
+      // targetPage.pageContent
     );
     expect(rowPage.Tags[0]).toBe("React");
   });
