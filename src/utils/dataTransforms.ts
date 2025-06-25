@@ -101,39 +101,103 @@ export function mapPagesToCustomTableData(pages: Page[]): RowPage[] {
   );
 }
 
+/**
+ * Generates a list of unique property values from an array of RowPage objects,
+ * suitable for populating dropdown filters. It can handle both single-string properties
+ * (like 'Source' or 'Area') and array-of-string properties (like 'Tags').
+ *
+ * @param myTableView An array of `RowPage` objects representing the current table data.
+ * This data is used to extract the property values.
+ * @param selection The key (property name) from `RowPage` whose values are to be extracted.
+ * This function is designed to work with string or string array properties.
+ * Example: "Tags", "Source", "Area".
+ * @returns An array of `Item` objects, where each `Item` has a `value` property (string).
+ * Each `value` in the returned list is a unique, non-empty string extracted
+ * from the specified `selection` property across all `myTableView` rows.
+ */
 export function producePropList(
   myTableView: RowPage[],
-  selection: keyof RowPage // Changed from "Tags"
-
-  // selection: "Tags"
+  selection: keyof RowPage
 ): Item[] {
-  // Helper to determine if the property on RowPage is expected to be an array
+  // Helper to determine if the property on RowPage is expected to be an array of strings.
+  // This list should be updated if new array-type properties are added to RowPage
+  // that need to be processed by this function.
   const isArrayProp = (prop: keyof RowPage) =>
-    [
-      "Tags",
-      // Add any other array properties from RowPage if they exist
-    ].includes(prop as string); // Cast to string for includes check if needed
+    ["Area", "Source", "Tags"].includes(prop as string);
 
+  // Use reduce to iterate over each row and accumulate all relevant property values
+  // into a single flat array of strings.
   const rawList: string[] = myTableView.reduce<string[]>((accumulator, row) => {
-    const propValue = row[selection];
+    const propValue = row[selection]; // Get the value of the selected property from the current row
+
+    // Check if the property is expected to be an array and if its value is indeed an array.
     if (isArrayProp(selection) && Array.isArray(propValue)) {
+      // CHQ: The two lines below determine the text that fills the options for the dropdown list
+      // If it's an array, spread its elements into the accumulator.
+      // return [...accumulator, ..."propValue"];
       return [...accumulator, ...propValue];
     } else if (
-      !isArrayProp(selection) &&
+      // If it's not an array property, check if its value is a non-empty string.
+      // CHQ: No need to keep single selects out of options that dropdown can select from
+      // !isArrayProp(selection) &&
       typeof propValue === "string" &&
       propValue.trim() !== ""
     ) {
-      // Handle single string properties like Status or Level
+      // If it's a valid non-empty string, add it to the accumulator.
       return [...accumulator, propValue];
     }
+    // If the value is not a string, or an empty string, or doesn't match the expected type,
+    // it's ignored and the accumulator remains unchanged.
     return accumulator;
   }, []);
 
+  // Create a Set from the raw list to automatically filter out duplicate values,
+  // then convert it back to an array.
   const uniqueList = [...new Set(rawList)];
 
+  // Map the unique string values into the { value: string } format required by the Item interface.
   const propList: Item[] = uniqueList.map((theProp) => ({
     value: theProp,
   }));
 
   return propList;
 }
+
+// export function producePropList(
+//   myTableView: RowPage[],
+//   selection: keyof RowPage // Changed from "Tags"
+
+//   // selection: "Tags"
+// ): Item[] {
+//   // Helper to determine if the property on RowPage is expected to be an array
+//   const isArrayProp = (prop: keyof RowPage) =>
+//     [
+//       "Area",
+//       "Source",
+//       "Tags",
+//       // Add any other array properties from RowPage if they exist
+//     ].includes(prop as string); // Cast to string for includes check if needed
+
+//   const rawList: string[] = myTableView.reduce<string[]>((accumulator, row) => {
+//     const propValue = row[selection];
+//     if (isArrayProp(selection) && Array.isArray(propValue)) {
+//       return [...accumulator, ...propValue];
+//     } else if (
+//       !isArrayProp(selection) &&
+//       typeof propValue === "string" &&
+//       propValue.trim() !== ""
+//     ) {
+//       // Handle single string properties like Status or Level
+//       return [...accumulator, propValue];
+//     }
+//     return accumulator;
+//   }, []);
+
+//   const uniqueList = [...new Set(rawList)];
+
+//   const propList: Item[] = uniqueList.map((theProp) => ({
+//     value: theProp,
+//   }));
+
+//   return propList;
+// }

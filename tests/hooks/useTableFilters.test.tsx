@@ -43,68 +43,6 @@ interface RowPage {
   pageContent: string;
 }
 
-interface Item {
-  value: string;
-}
-
-/**
- * Generates a random date within a specified range.
- * @returns A Date object.
- */
-function getRandomDate(): Date {
-  const start = new Date(2023, 0, 1); // Jan 1, 2023
-  const end = new Date(2025, 11, 31); // Dec 31, 2025
-  const randomTimestamp =
-    start.getTime() + Math.random() * (end.getTime() - start.getTime());
-  return new Date(randomTimestamp);
-}
-
-/**
- * Generates a random string of a given length.
- * @param length The length of the string.
- * @returns A random string.
- */
-function getRandomString(length: number): string {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
-/**
- * Generates a random Page object with the 'Area' property set to "CS".
- * @param id The ID for the new page.
- * @returns A randomly generated Page object.
- */
-function generateRandomCSPage(id: string): Page {
-  return {
-    id: id,
-    Name: `Random CS Project ${getRandomString(5)}`,
-    CreatedTime: getRandomDate(),
-    EditedTime: getRandomDate(),
-    CreatedStart: getRandomDate(),
-    CreatedEnd: getRandomDate(),
-    PublishedStart: getRandomDate(),
-    PublishedEnd: getRandomDate(),
-    Area: "CS", // Explicitly set to "CS" as requested
-    Source: `Source ${getRandomString(3)}`,
-    Link: `https://example.com/cs-link-${getRandomString(7)}`,
-    Type: Math.random() > 0.5 ? "Article" : "Tutorial",
-    Tags: [
-      "CS",
-      Math.random() > 0.5 ? "Algorithms" : "Data Structures",
-      Math.random() > 0.5 ? "Web Dev" : "AI/ML",
-      getRandomString(4),
-    ],
-    PageURL: `https://notion.so/cs-page-${getRandomString(8)}`,
-    pageContent: `Randomly generated content for CS project ${getRandomString(100)}.`,
-  };
-}
-
 const mockRowPages: RowPage[] = [
   {
     myID: "0",
@@ -119,7 +57,12 @@ const mockRowPages: RowPage[] = [
     Source: "Reddit",
     Link: "https://reddit.com",
     Type: "Article",
-    Tags: ["React", "TypeScript", "Frontend"],
+    Tags: [
+      "React",
+      "TypeScript",
+      "Frontend",
+      "(YouTube) Fireship - 100 Seconds",
+    ],
     PageURL: "https://notion.so/fe0",
     pageContent: "",
   },
@@ -165,6 +108,29 @@ const mockRowPages: RowPage[] = [
       "Frontend",
       "Code Testing: Unit Testing",
       "Testing framework: Vitest",
+    ],
+    PageURL: "https://notion.so/fe2",
+    pageContent: "",
+  },
+  {
+    myID: "3",
+    Name: "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+    CreatedTime: new Date("2024-01-10T10:00:00Z"),
+    EditedTime: new Date("2024-01-05T09:00:00Z"),
+    CreatedStart: new Date("2024-02-01T23:59:59Z"),
+    CreatedEnd: new Date("2024-01-15T11:00:00Z"),
+    PublishedStart: new Date("2024-03-01T00:00:00Z"),
+    PublishedEnd: new Date("2024-03-01T00:00:00Z"),
+    Area: "Career",
+    Source: "YouTube",
+    Link: "https://youtube.com",
+    Type: "Article",
+    Tags: [
+      "Computer Science (CS)",
+      "software engineer (SWE)(dev)",
+      "source to ask for help",
+      "Career Services: resume review",
+      "resume",
     ],
     PageURL: "https://notion.so/fe2",
     pageContent: "",
@@ -253,20 +219,21 @@ describe("useTableFilters", () => {
     });
 
     // FIXME: CHQ: test broken
-    // it("should ignore filter when disabled", () => {
-    //   const { result } = renderHook(() => useTableFilters(mockRowPages));
+    it("should ignore filter when disabled", () => {
+      const { result } = renderHook(() => useTableFilters(mockRowPages));
 
-    //   // Enable and set text, then disable
-    //   act(() => {
-    //     result.current.filterHandlers.togglePageFilter();
-    //     result.current.filterHandlers.setPageFilterText("testing");
-    //     result.current.filterHandlers.togglePageFilter(); // Disable
-    //   });
+      // Enable and set text, then disable
+      act(() => {
+        result.current.filterHandlers.togglePageFilter();
+        result.current.filterHandlers.setPageFilterText("testing");
+        result.current.filterHandlers.togglePageFilter(); // Disable
+      });
 
-    //   expect(result.current.filterProps.isPageFilterEnabled).toBe(false);
-    //   expect(result.current.filterProps.pageFilterText).toBe(""); // Should be reset
-    //   expect(result.current.filteredData.length).toBe(mockPages.length); // Should show all data
-    // });
+      expect(result.current.filterProps.isPageFilterEnabled).toBe(false);
+      expect(result.current.filterProps.pageFilterText).toBe(""); // Should be reset
+      // expect(result.current.filteredData.length).toBe(mockPages.length); // Purposefully broken - trigger fail in CI/CD pipeline
+      expect(result.current.filteredData.length).toBe(mockRowPages.length); // Should show all data
+    });
 
     it("should reset page filter text when toggled off", () => {
       const { result } = renderHook(() => useTableFilters(mockRowPages));
@@ -315,11 +282,17 @@ describe("useTableFilters", () => {
 
       act(() => {
         result.current.filterHandlers.handleTagCountChange({
-          target: { value: 3 },
+          // CHQ: added a fourth tag to the target page so updating the target filter to 4 tags
+          target: { value: 4 },
+          // target: { value: 3 },
         } as SelectChangeEvent<number | string>);
       });
 
-      expect(result.current.filterProps.tagCountFilter).toBe(3);
+      // CHQ: added a fourth tag to "Progressive Web Apps in 100 Seconds Build a PWA from Scratch"
+      //  so updating the target filter to 4 tags so the intended page shows up in the tests
+      expect(result.current.filterProps.tagCountFilter).toBe(4);
+      // expect(result.current.filterProps.tagCountFilter).toBe(3);
+
       expect(result.current.filteredData.map((j) => j.Name)).toEqual([
         "Progressive Web Apps in 100 Seconds Build a PWA from Scratch",
       ]);
@@ -412,26 +385,28 @@ describe("useTableFilters", () => {
     //   // expect(result.current.filteredData.length).toBe(mockPages.length);
     // });
 
-    //   it("should reset Source filter using resetSourceFilters handler", () => {
-    //     const { result } = renderHook(() => useTableFilters(mockRowPages));
+    it("should reset Source filter using resetSourceFilters handler", () => {
+      const { result } = renderHook(() => useTableFilters(mockRowPages));
 
-    //     act(() => {
-    //       result.current.filterHandlers.toggleSourceFilter();
-    //       result.current.filterHandlers.handleSourceChange({ value: "Rejected" });
-    //     });
-    //     expect(result.current.filterProps.sourceSelected).toBe("Rejected");
-    //     expect(result.current.filteredData.length).toBe(1); // Data Scientist
-    //     //
-    //     act(() => {
-    //       result.current.filterHandlers.resetSourceFilters();
-    //     });
-    //     expect(result.current.filterProps.sourceSelected).toBe("");
-    //     expect(result.current.filteredData.length).toBe(mockRowPages.length);
-    //   });
+      act(() => {
+        result.current.filterHandlers.toggleSourceFilter();
+        result.current.filterHandlers.handleSourceChange({ value: "YouTube" });
+      });
+      expect(result.current.filterProps.sourceSelected).toBe("YouTube");
+      // YouTube - there are 2 entries with a source of YouTube
+      expect(result.current.filteredData.length).toBe(2); // YouTube
+      //
+      act(() => {
+        result.current.filterHandlers.resetSourceFilters();
+      });
+      expect(result.current.filterProps.sourceSelected).toBe("");
+      expect(result.current.filteredData.length).toBe(mockRowPages.length);
+    });
   });
 
   // Test Case 5: Multi-select Filters (Tags)
   describe("Multi-select Tags Filter", () => {
+    // Test Case 5.1:
     it("should add a tag and filter data when enabled", () => {
       const { result } = renderHook(() => useTableFilters(mockRowPages));
 
@@ -449,6 +424,7 @@ describe("useTableFilters", () => {
       ]);
     });
 
+    // Test Case 5.2:
     it("should remove a tag if already selected", () => {
       const { result } = renderHook(() => useTableFilters(mockRowPages));
 
@@ -466,65 +442,69 @@ describe("useTableFilters", () => {
       // expect(result.current.filteredData.length).toBe(mockPages.length); // Back to all data
     });
 
-    // FIXME: CHQ
-    // it("should add multiple tags and filter with AND logic", () => {
-    //   const { result } = renderHook(() => useTableFilters(mockRowPages));
+    // Test Case 5.3:
+    it("should add multiple tags and filter with AND logic", () => {
+      const { result } = renderHook(() => useTableFilters(mockRowPages));
 
-    //   act(() => {
-    //     result.current.filterHandlers.toggleTagFilter();
-    //     result.current.filterHandlers.handleTagNameChange({ value: "Python" });
-    //     result.current.filterHandlers.handleTagNameChange({
-    //       value: "Machine Learning",
-    //     });
-    //   });
+      act(() => {
+        result.current.filterHandlers.toggleTagFilter();
+        result.current.filterHandlers.handleTagNameChange({
+          value: "Computer Science (CS)",
+        });
+        result.current.filterHandlers.handleTagNameChange({
+          value: "resume",
+        });
+      });
 
-    //   expect(result.current.filterProps.tagNameList).toEqual([
-    //     "Python",
-    //     "Machine Learning",
-    //   ]);
-    //   expect(result.current.filteredData.map((j) => j.Name)).toEqual([
-    //     "Data Scientist",
-    //   ]);
-    // });
+      expect(result.current.filterProps.tagNameList).toEqual([
+        "Computer Science (CS)",
+        "resume",
+      ]);
+      expect(result.current.filteredData.map((j) => j.Name)).toEqual([
+        "Is there a good service for getting your resume reviewed by someone that does tech hiring?",
+      ]);
+    });
 
-    // FIXME: CHQ
-    // it("should reset tag filter using resetTagFilters handler", () => {
-    //   const { result } = renderHook(() => useTableFilters(mockRowPages));
+    // Test Case 5.4:
+    it("should reset tag filter using resetTagFilters handler", () => {
+      const { result } = renderHook(() => useTableFilters(mockRowPages));
 
-    //   act(() => {
-    //     result.current.filterHandlers.toggleTagFilter();
-    //     result.current.filterHandlers.handleTagNameChange({ value: "React" });
-    //   });
-    //   expect(result.current.filterProps.tagNameList).toEqual(["React"]);
+      act(() => {
+        result.current.filterHandlers.toggleTagFilter();
+        result.current.filterHandlers.handleTagNameChange({ value: "React" });
+      });
+      expect(result.current.filterProps.tagNameList).toEqual(["React"]);
 
-    //   act(() => {
-    //     result.current.filterHandlers.resetTagFilters();
-    //   });
-    //   expect(result.current.filterProps.tagNameList).toEqual([]);
-    //   expect(result.current.filteredData.length).toBe(mockRowPages.length);
-    //   // expect(result.current.filteredData.length).toBe(mockPages.length); //2
-    //   // expect(result.current.filteredData.length).toBe(77);
-    // });
+      act(() => {
+        result.current.filterHandlers.resetTagFilters();
+      });
+      expect(result.current.filterProps.tagNameList).toEqual([]);
+      expect(result.current.filteredData.length).toBe(mockRowPages.length);
+      // expect(result.current.filteredData.length).toBe(mockPages.length); //2
+      // expect(result.current.filteredData.length).toBe(77);
+    });
 
-    // FIXME: CHQ
-    // it("should ignore filter when disabled for tags", () => {
-    //   const { result } = renderHook(() => useTableFilters(mockRowPages));
+    // Test Case 5.5:
+    it("should ignore filter when disabled for tags", () => {
+      const { result } = renderHook(() => useTableFilters(mockRowPages));
 
-    //   act(() => {
-    //     result.current.filterHandlers.toggleTagFilter(); // Enable
-    //     result.current.filterHandlers.handleTagNameChange({ value: "React" });
-    //   });
-    //   expect(result.current.filteredData.length).toBe(1);
+      act(() => {
+        result.current.filterHandlers.toggleTagFilter(); // Enable
+        result.current.filterHandlers.handleTagNameChange({ value: "React" });
+      });
+      // CHQ: Now there are three entries with the "React" tag
+      // expect(result.current.filteredData.length).toBe(1);
+      expect(result.current.filteredData.length).toBe(3);
 
-    //   act(() => {
-    //     result.current.filterHandlers.toggleTagFilter(); // Disable
-    //   });
-    //   expect(result.current.filterProps.isTagFilterEnabled).toBe(false);
-    //   expect(result.current.filterProps.tagNameList).toEqual(["React"]); // List state persists, but filter is off
-    //   expect(result.current.filteredData.length).toBe(mockRowPages.length); // All data shown
+      act(() => {
+        result.current.filterHandlers.toggleTagFilter(); // Disable
+      });
+      expect(result.current.filterProps.isTagFilterEnabled).toBe(false);
+      expect(result.current.filterProps.tagNameList).toEqual(["React"]); // List state persists, but filter is off
+      expect(result.current.filteredData.length).toBe(mockRowPages.length); // All data shown
 
-    //   // expect(result.current.filteredData.length).toBe(mockPages.length); // All data shown
-    // });
+      // expect(result.current.filteredData.length).toBe(mockPages.length); // All data shown
+    });
   });
 
   // Test Case 6: Combined Filters

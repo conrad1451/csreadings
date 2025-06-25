@@ -7,7 +7,7 @@ export interface ColumnVisibility {
   Name: boolean;
   CreatedTime: boolean;
   EditedTime: boolean;
-  CreatedStart: boolean;
+  NotedTime: boolean;
   CreatedEnd: boolean;
   PublishedStart: boolean;
   PublishedEnd: boolean;
@@ -25,7 +25,7 @@ export const defaultColumnVisibility: ColumnVisibility = {
   Name: true,
   CreatedTime: true,
   EditedTime: false,
-  CreatedStart: true,
+  NotedTime: true,
   CreatedEnd: false,
   PublishedStart: true,
   PublishedEnd: false,
@@ -43,7 +43,7 @@ export const smartphoneVisibility: ColumnVisibility = {
   Name: true,
   CreatedTime: false,
   EditedTime: false,
-  CreatedStart: true,
+  NotedTime: true,
   CreatedEnd: false,
   PublishedStart: true,
   PublishedEnd: false,
