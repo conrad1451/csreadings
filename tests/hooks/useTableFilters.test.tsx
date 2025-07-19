@@ -1,3 +1,5 @@
+// useTableFilters.test.tsx
+//
 // CHQ: Gemini AI generated this:
 
 import { describe, it, expect } from "vitest";
