@@ -1,5 +1,4 @@
 // App.tsx
-
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
@@ -8,13 +7,12 @@ import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
-// import CSNotionPages from "./apis/CSNotionPages.tsx";
 import CSNotionPages2 from "./apis/CSNotionPages2.tsx";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import "./App.css";
 
-function OldApp() {
+export function OldApp() {
   const [count, setCount] = useState(0);
 
   return (
@@ -65,18 +63,25 @@ function NavigationButtons() {
   );
 }
 
-function App() {
+// Export the core AppContent separately for testing
+export function AppContent() {
+  // Renamed to AppContent
   return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<NavigationButtons />} />
-          <Route path="/orig" element={<OldApp />} />
-          <Route path="/compscilearning" element={<CSNotionPages2 />} />
-        </Routes>
-      </Router>
-    </>
+    <Routes>
+      <Route path="/" element={<NavigationButtons />} />
+      <Route path="/orig" element={<OldApp />} />
+      <Route path="/compscilearning" element={<CSNotionPages2 />} />
+    </Routes>
   );
 }
 
-export default App;
+// Default export for the actual application
+function AppWithRouter() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}
+
+export default AppWithRouter;
