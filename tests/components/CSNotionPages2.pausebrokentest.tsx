@@ -4,7 +4,7 @@ import React from "react"; // CHQ: Gemini AI suggested this
 
 import { it, expect, describe, afterEach } from "vitest"; // CHQ: Gemini AI suggested before each
 import { render, cleanup } from "@testing-library/react";
-import App from "../../src/App";
+import AppContent from "../../src/App";
 import "@testing-library/jest-dom/vitest";
 import { MemoryRouter } from "react-router-dom"; // Added MemoryRouter
 
@@ -15,8 +15,8 @@ describe("App snapshot", () => {
 
   it("renders correctly", () => {
     const { asFragment } = render(
-      <MemoryRouter>
-        <App />
+      <MemoryRouter initialEntries={["/"]}>
+        <AppContent />
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();
