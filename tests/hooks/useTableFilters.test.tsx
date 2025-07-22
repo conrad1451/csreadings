@@ -1,3 +1,5 @@
+// useTableFilters.test.tsx
+//
 // CHQ: Gemini AI generated this:
 
 import { describe, it, expect } from "vitest";
@@ -7,41 +9,7 @@ import { SelectChangeEvent } from "@mui/material/Select"; // For Material-UI Sel
 
 // --- Interfaces  ---
 
-interface Page {
-  id: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  pageContent: string;
-}
-
-interface RowPage {
-  myID: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  pageContent: string;
-}
+import { RowPage, Page } from "../../src/utils/dataTransforms";
 
 const mockRowPages: RowPage[] = [
   {
@@ -64,7 +32,7 @@ const mockRowPages: RowPage[] = [
       "(YouTube) Fireship - 100 Seconds",
     ],
     PageURL: "https://notion.so/fe0",
-    pageContent: "",
+    // pageContent: "",
   },
   {
     myID: "1",
@@ -87,7 +55,7 @@ const mockRowPages: RowPage[] = [
       "WebDev (web development)",
     ],
     PageURL: "https://notion.so/fe1",
-    pageContent: "",
+    // pageContent: "",
   },
   {
     myID: "2",
@@ -110,7 +78,7 @@ const mockRowPages: RowPage[] = [
       "Testing framework: Vitest",
     ],
     PageURL: "https://notion.so/fe2",
-    pageContent: "",
+    // pageContent: "",
   },
   {
     myID: "3",
@@ -133,7 +101,7 @@ const mockRowPages: RowPage[] = [
       "resume",
     ],
     PageURL: "https://notion.so/fe2",
-    pageContent: "",
+    // pageContent: "",
   },
   // Replaced with randomly generated data in the new order
   // generateRandomCSPage("2"),
@@ -156,7 +124,7 @@ const mockPages: Page[] = [
     Type: "Article",
     Tags: ["React", "TypeScript", "Frontend"],
     PageURL: "https://notion.so/fe1",
-    pageContent: "",
+    // pageContent: "",
   },
   {
     id: "1",
@@ -173,7 +141,7 @@ const mockPages: Page[] = [
     Type: "Article",
     Tags: ["React", "TypeScript", "Frontend"],
     PageURL: "https://notion.so/fe1",
-    pageContent: "",
+    // pageContent: "",
   },
   // Replaced with randomly generated data in the new order
   // generateRandomCSPage("2"),
