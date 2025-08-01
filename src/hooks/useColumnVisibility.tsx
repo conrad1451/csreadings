@@ -1,29 +1,12 @@
 // import { useState, useMemo } from "react";
 import { useState } from "react";
 
-// --- Interfaces
-export interface ColumnVisibility {
-  myID: boolean;
-  Name: boolean;
-  CreatedTime: boolean;
-  EditedTime: boolean;
-  NotedTime: boolean;
-  CreatedEnd: boolean;
-  PublishedStart: boolean;
-  PublishedEnd: boolean;
-  Area: boolean;
-  Source: boolean;
-  Link: boolean;
-  Type: boolean;
-  Tags: boolean;
-  PageURL: boolean;
-  // pageContent: boolean;
-}
+import { ColumnVisibility } from "../utils/dataTypes";
 // --- Default and Preset Column Visibility Settings ---
 export const defaultColumnVisibility: ColumnVisibility = {
   myID: true,
   Name: true,
-  CreatedTime: true,
+  CreatedTime: false,
   EditedTime: false,
   NotedTime: true,
   CreatedEnd: false,
@@ -49,8 +32,8 @@ export const smartphoneVisibility: ColumnVisibility = {
   PublishedEnd: false,
   Area: true,
   Source: true,
-  Link: true,
-  Type: true,
+  Link: false,
+  Type: false,
   Tags: true,
   PageURL: true,
   // pageContent: true,

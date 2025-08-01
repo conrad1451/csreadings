@@ -31,7 +31,7 @@ import { useTableFilters } from "./hooks/useTableFilters";
 import { useTableSorting } from "./hooks/useTableSorting"; // Path to your useTableSorting.ts
 import {
   useColumnVisibility,
-  ColumnVisibility,
+  // ColumnVisibility,
   visibilityPresets,
 } from "./hooks/useColumnVisibility";
 import { displayDate } from "./utils/dateDisplay";
@@ -41,45 +41,7 @@ import {
   producePropList,
 } from "./utils/dataTransforms"; // Adjust the path as per your project structure
 
-interface Page {
-  id: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  // pageContent: string;
-}
-
-interface RowPage {
-  myID: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  // pageContent: string;
-}
-
-interface Item {
-  value: string;
-}
+import { Item, RowPage, Page, ColumnVisibility } from "./utils/dataTypes";
 
 const allColumnKeys: Array<keyof ColumnVisibility> = [
   "Name",

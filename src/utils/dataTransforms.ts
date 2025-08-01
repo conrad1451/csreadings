@@ -1,44 +1,6 @@
 // dataTransforms.ts
+import { Item, RowPage, Page } from "./dataTypes";
 
-export interface Item {
-  value: string;
-}
-
-export interface Page {
-  id: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  // pageContent: string;
-}
-
-export interface RowPage {
-  myID: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  // pageContent: string;
-}
 export function createCustomTableData(
   myID: string, // First as per 'targetPage.id'
   Name: string,

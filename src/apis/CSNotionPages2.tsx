@@ -1,3 +1,5 @@
+// CSNotionPages2.tsx
+
 // Source:
 // [1]: https://www.freecodecamp.org/news/how-to-fetch-api-data-in-react/
 // [2]: https://refine.dev/blog/material-ui-select-component/
@@ -7,23 +9,7 @@ import axios from "axios";
 import CustomTable from "../MyTable2";
 // const databaseId = process.env.CS_CONTENT;
 
-interface Page {
-  id: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  pageContent: string;
-}
+import { Page } from "../utils/dataTypes";
 
 const ReturnFormat2 = (props: { thePages: Page[] }) => {
   return (
