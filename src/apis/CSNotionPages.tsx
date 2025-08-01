@@ -5,10 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import CustomTable from "../MyTable";
 
-interface Page {
-  name: string;
-  tags: string[];
-}
+import { PageAlt as Page } from "../utils/dataTypes";
 
 const ReturnFormat2 = (props: { thePages: Page[] }) => {
   return (
@@ -24,6 +21,8 @@ const CSNotionPages = () => {
 
   useEffect(() => {
     const dataSource = import.meta.env.VITE_TABLE_DATA_SOURCE; // Access the env variable
+
+    // const dataSource = import.meta.env.VITE_TABLE_DATA_BACKUP_SOURCE; // Access the env variable
 
     axios
       .get(dataSource)

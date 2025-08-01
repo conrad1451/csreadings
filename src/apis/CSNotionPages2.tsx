@@ -9,23 +9,7 @@ import axios from "axios";
 import CustomTable from "../MyTable2";
 // const databaseId = process.env.CS_CONTENT;
 
-interface Page {
-  id: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  pageContent: string;
-}
+import { Page } from "../utils/dataTypes";
 
 const ReturnFormat2 = (props: { thePages: Page[] }) => {
   return (

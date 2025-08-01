@@ -9,10 +9,7 @@ import Paper from "@mui/material/Paper";
 
 import { useState } from "react";
 
-interface Page {
-  name: string;
-  tags: string[];
-}
+import { PageAlt as Page } from "./utils/dataTypes";
 
 function createCustomTableData(name: string, tags: string[]) {
   return { name, tags };
@@ -122,23 +119,24 @@ const CustomTable = (props: { thePages: Page[] }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((row, index) =>
-              row && row.name ? ( // Safety Check
-                <TableRow
-                  key={row.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {index + 1}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="left">
-                    {concatenateArrayToString(row.tags)}
-                  </TableCell>
-                </TableRow>
-              ) : null // or return a placeholder row
+            {tableData.map(
+              (row, index) =>
+                row && row.name ? ( // Safety Check
+                  <TableRow
+                    key={row.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {row.name}
+                    </TableCell>
+                    <TableCell align="left">
+                      {concatenateArrayToString(row.tags)}
+                    </TableCell>
+                  </TableRow>
+                ) : null // or return a placeholder row
             )}
           </TableBody>
         </Table>

@@ -9,7 +9,8 @@ import { useState, useMemo } from "react";
  * @returns -1 if a < b, 1 if a > b, 0 if equal, based on direction.
  */
 
-import { RowPage } from "../utils/dataTransforms";
+import { RowPage } from "../utils/dataTypes";
+
 function sortByStringComparator(
   a: RowPage,
   b: RowPage,
