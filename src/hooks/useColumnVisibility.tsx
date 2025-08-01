@@ -6,7 +6,7 @@ import { ColumnVisibility } from "../utils/dataTypes";
 export const defaultColumnVisibility: ColumnVisibility = {
   myID: true,
   Name: true,
-  CreatedTime: true,
+  CreatedTime: false,
   EditedTime: false,
   NotedTime: true,
   CreatedEnd: false,
