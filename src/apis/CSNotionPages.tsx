@@ -2,7 +2,6 @@
 // [1]: https://www.freecodecamp.org/news/how-to-fetch-api-data-in-react/
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import CustomTable from "../MyTable";
 
 import { PageAlt as Page } from "../utils/dataTypes";
@@ -17,32 +16,33 @@ const ReturnFormat2 = (props: { thePages: Page[] }) => {
 
 const CSNotionPages = () => {
   const [pages, setPages] = useState<Page[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // Add loading state
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const dataSource = import.meta.env.VITE_TABLE_DATA_SOURCE; // Access the env variable
+    const dataSource = import.meta.env.VITE_TABLE_DATA_SOURCE;
 
-    // const dataSource = import.meta.env.VITE_TABLE_DATA_BACKUP_SOURCE; // Access the env variable
-
-    axios
-      .get(dataSource)
+    fetch(dataSource)
       .then((res) => {
-        const theData: Page[] = res.data;
-        setPages(theData);
-        setIsLoading(false); // Set loading to false when data is fetched
-        console.log(pages);
+        if (!res.ok) {
+          throw new Error(`HTTP error, status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data: Page[]) => {
+        setPages(data);
+        setIsLoading(false);
+        console.log(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setIsLoading(false); // Set loading to false even on error
+        setIsLoading(false);
       });
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>; // Display loading message
+    return <div>Loading...</div>;
   }
 
   return <ReturnFormat2 thePages={pages} />;
 };
-
 export default CSNotionPages;

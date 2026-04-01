@@ -5,7 +5,6 @@
 // [2]: https://refine.dev/blog/material-ui-select-component/
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import CustomTable from "../MyTable2";
 // const databaseId = process.env.CS_CONTENT;
 
@@ -27,10 +26,12 @@ const CSNotionPages2 = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(dataSource);
-      const theData: Page[] = response.data;
+      const response = await fetch(dataSource);
+      if (!response.ok) {
+        throw new Error(`HTTP error, status: ${response.status}`);
+      }
+      const theData: Page[] = await response.json();
       setPages(theData);
-
       // CHQ: Gemini AI: Extract all unique tags from the fetched pages
       const tags = new Set<string>();
       theData.forEach((page) => {
@@ -47,34 +48,6 @@ const CSNotionPages2 = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  //   const handleLeftClick = () => {
-  //     setChoiceIndex((prevIndex) => {
-  //       return (prevIndex - 1) % infoChoices.length;
-  //     });
-  //   };
-
-  //   const handleRightClick = () => {
-  //     setChoiceIndex((prevIndex) => {
-  //       return (prevIndex + 1) % infoChoices.length;
-  //     });
-  //   };
-
-  //   const handleTagChange = (value: string) => {
-  //     setSelectedTag(value);
-  //     // Filter pages based on the selected tag.
-  //     if (value) { // Only filter if a tag is actually selected.  If value is null, show all.
-  //         const filteredPages = pages.filter(page => page.Tags.includes(value));
-  //         setPages(filteredPages); // Update the displayed pages
-  //     }
-  //     else{
-  //         fetchData();
-  //     }
-  //   };
-
-  // const handleSetTags = (value: string) =>{
-  //   setTheTags(value => theTags.concat(value))
-  // }
 
   if (isLoading) {
     return <div>Loading...</div>;
