@@ -1,8 +1,10 @@
+// App.test.tsx
+
 import React from "react"; // CHQ: Gemini AI suggested this
 
 import { it, expect, describe, beforeEach } from "vitest"; // CHQ: Gemini AI suggested before each
 import { render, screen } from "@testing-library/react";
-import App from "../../src/App";
+import AppContent from "../../src/App";
 import "@testing-library/jest-dom/vitest";
 
 describe("NavigationButtons", () => {
@@ -10,7 +12,7 @@ describe("NavigationButtons", () => {
   // This ensures a fresh render for each test, preventing interference
   beforeEach(() => {
     // clean up any previous renders to prevent tests from affecting each other
-    render(<App />);
+    render(<AppContent />);
   });
 
   it("should render button for going to original page", () => {

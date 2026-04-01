@@ -7,19 +7,7 @@ import React from "react";
 
 import Downshift from "downshift";
 
-// interface Item {
-//   value: string;
-// }
-
-interface Item {
-  value: string;
-}
-
-interface BasicDownshiftProps {
-  items: Item[];
-  labelText: string;
-  handlethechange: (selection: Item | null) => void;
-}
+import { Item, BasicDownshiftProps } from "../utils/dataTypes";
 
 const BasicDownshift: React.FC<BasicDownshiftProps> = ({
   items,

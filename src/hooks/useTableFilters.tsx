@@ -3,27 +3,7 @@
 import { useState, useMemo } from "react";
 import { SelectChangeEvent } from "@mui/material/Select"; // For Material-UI Select events
 
-interface RowPage {
-  myID: string;
-  Name: string;
-  CreatedTime: Date;
-  EditedTime: Date;
-  CreatedStart: Date;
-  CreatedEnd: Date;
-  PublishedStart: Date;
-  PublishedEnd: Date;
-  Area: string;
-  Source: string;
-  Link: string;
-  Type: string;
-  Tags: string[];
-  PageURL: string;
-  // pageContent: string;
-}
-
-interface Item {
-  value: string;
-}
+import { Item, RowPage } from "../utils/dataTypes";
 
 // --- Utility Filtering Functions (Can be moved to a separate file like utils/filters.ts) ---
 
